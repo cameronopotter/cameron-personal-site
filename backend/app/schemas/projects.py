@@ -2,7 +2,9 @@
 Project-related Pydantic schemas
 """
 
-from pydantic import BaseModel, Field, ConfigDict, validator
+from __future__ import annotations
+
+from pydantic import BaseModel, Field, ConfigDict, field_validator
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 from uuid import UUID
@@ -115,14 +117,6 @@ class ProjectResponse(ProjectBase, UUIDMixin, TimestampMixin):
     visitor_interactions: int = Field(default=0, description="Total visitor interactions")
 
 
-class ProjectDetailResponse(ProjectResponse):
-    """Detailed project response with growth history and analytics"""
-    growth_logs: Optional[List['ProjectGrowthLogResponse']] = Field(default=[], description="Growth history")
-    related_skills: Optional[List[str]] = Field(default=[], description="Related skills")
-    engagement_metrics: Optional[Dict[str, Any]] = Field(default={}, description="Engagement analytics")
-    recent_activity: Optional[Dict[str, Any]] = Field(default={}, description="Recent GitHub/deployment activity")
-
-
 class ProjectGrowthLogResponse(UUIDMixin, TimestampMixin):
     """Project growth log entry response"""
     project_id: UUID = Field(..., description="Associated project ID")
@@ -185,7 +179,8 @@ class InteractionEvent(BaseModel):
     duration_seconds: Optional[int] = Field(None, ge=0, description="Duration of interaction")
     metadata: Optional[Dict[str, Any]] = Field(default={}, description="Additional interaction data")
     
-    @validator('interaction_type')
+    @field_validator('interaction_type')
+    @classmethod
     def validate_interaction_type(cls, v):
         allowed_types = [
             'view', 'click', 'hover', 'scroll', 'zoom', 'rotate',
@@ -215,3 +210,11 @@ class InteractionResponse(BaseResponse):
     growth_triggered: bool = Field(default=False, description="Whether interaction triggered growth")
     new_growth_stage: Optional[GrowthStage] = Field(None, description="New growth stage if changed")
     engagement_score_delta: Optional[float] = Field(None, description="Change in engagement score")
+
+
+class ProjectDetailResponse(ProjectResponse):
+    """Detailed project response with growth history and analytics"""
+    growth_logs: Optional[List[ProjectGrowthLogResponse]] = Field(default=[], description="Growth history")
+    related_skills: Optional[List[str]] = Field(default=[], description="Related skills")
+    engagement_metrics: Optional[Dict[str, Any]] = Field(default={}, description="Engagement analytics")
+    recent_activity: Optional[Dict[str, Any]] = Field(default={}, description="Recent GitHub/deployment activity")

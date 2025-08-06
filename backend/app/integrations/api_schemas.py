@@ -5,7 +5,7 @@ Pydantic schemas for external API responses and data models.
 from datetime import datetime
 from typing import List, Optional, Dict, Any, Union
 from enum import Enum
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 # GitHub API Schemas
@@ -69,10 +69,11 @@ class GitHubLanguageStats(BaseModel):
     primary_language: Optional[str] = None
     diversity_score: Optional[float] = None
     
-    @validator('primary_language', pre=True, always=True)
-    def set_primary_language(cls, v, values):
-        if not v and 'languages' in values:
-            languages = values['languages']
+    @field_validator('primary_language', mode='before')
+    @classmethod
+    def set_primary_language(cls, v, info):
+        if not v and info.data and 'languages' in info.data:
+            languages = info.data['languages']
             if languages:
                 return max(languages, key=languages.get)
         return v

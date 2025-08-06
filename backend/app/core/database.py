@@ -14,60 +14,35 @@ from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.pool import NullPool
 from pydantic_settings import BaseSettings
 
+from app.core.config import settings
 from app.models.base import Base
 
 logger = logging.getLogger(__name__)
 
-
-class DatabaseSettings(BaseSettings):
-    """Database configuration settings"""
-    
-    # Database URLs
-    database_url: str = "postgresql://postgres:password@localhost:5432/digital_greenhouse"
-    async_database_url: str = "postgresql+asyncpg://postgres:password@localhost:5432/digital_greenhouse"
-    test_database_url: str = "postgresql://postgres:password@localhost:5432/digital_greenhouse_test"
-    
-    # Connection pool settings
-    pool_size: int = 20
-    max_overflow: int = 30
-    pool_pre_ping: bool = True
-    pool_recycle: int = 300
-    
-    # Query settings
-    echo_sql: bool = False
-    slow_query_threshold: float = 1.0
-    
-    class Config:
-        env_file = ".env"
-        env_prefix = "DB_"
-
-
-# Initialize settings
-db_settings = DatabaseSettings()
+# SQLite specific configuration for foreign keys
+def _pragma_on_connect(dbapi_conn, connection_record):
+    """Enable foreign key support for SQLite"""
+    if 'sqlite' in str(dbapi_conn):
+        dbapi_conn.execute("PRAGMA foreign_keys=ON")
 
 # Async database engine for main operations
 async_engine = create_async_engine(
-    db_settings.async_database_url,
-    echo=db_settings.echo_sql,
-    pool_size=db_settings.pool_size,
-    max_overflow=db_settings.max_overflow,
-    pool_pre_ping=db_settings.pool_pre_ping,
-    pool_recycle=db_settings.pool_recycle,
+    settings.database_url,
+    echo=settings.debug,
+    poolclass=NullPool,  # SQLite doesn't need connection pooling
     future=True
 )
 
-# Sync engine for migrations and background tasks
+# Sync engine for migrations and background tasks  
 sync_engine = create_engine(
-    db_settings.database_url,
-    echo=db_settings.echo_sql,
-    pool_size=db_settings.pool_size,
-    max_overflow=db_settings.max_overflow,
-    pool_pre_ping=db_settings.pool_pre_ping,
-    pool_recycle=db_settings.pool_recycle,
-    connect_args={
-        "options": "-c default_transaction_isolation=read_committed"
-    }
+    settings.database_url.replace("+aiosqlite", ""),  # Remove async driver for sync engine
+    echo=settings.debug,
+    poolclass=NullPool
 )
+
+# Enable foreign keys for SQLite
+event.listens_for(sync_engine, "connect")(_pragma_on_connect)
+event.listens_for(async_engine.sync_engine, "connect")(_pragma_on_connect)
 
 # Session makers
 AsyncSessionLocal = async_sessionmaker(
@@ -191,7 +166,8 @@ async def check_database_connection() -> bool:
     """Check if database connection is healthy"""
     try:
         async with async_engine.begin() as conn:
-            await conn.execute("SELECT 1")
+            from sqlalchemy import text
+            await conn.execute(text("SELECT 1"))
         return True
     except Exception as e:
         logger.error(f"Database connection check failed: {e}")

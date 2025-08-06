@@ -5,7 +5,7 @@ Core configuration settings for Digital Greenhouse API
 import os
 from typing import List, Optional, Dict, Any
 from pydantic_settings import BaseSettings
-from pydantic import Field, validator
+from pydantic import Field, field_validator
 
 
 class Settings(BaseSettings):
@@ -18,16 +18,14 @@ class Settings(BaseSettings):
     debug: bool = False
     
     # Security
-    secret_key: str = Field(..., min_length=32, description="Secret key for JWT tokens")
+    secret_key: str = Field("digital-greenhouse-dev-secret-key-change-in-production-123456789", min_length=32, description="Secret key for JWT tokens")
     access_token_expire_minutes: int = 30
-    admin_password: str = Field(..., min_length=8, description="Admin dashboard password")
+    admin_password: str = Field("admin123dev", min_length=8, description="Admin dashboard password")
     
-    # Database
-    database_url: str = "postgresql://postgres:password@localhost:5432/digital_greenhouse"
-    async_database_url: str = "postgresql+asyncpg://postgres:password@localhost:5432/digital_greenhouse"
+    # Database (SQLite)
+    database_url: str = "sqlite+aiosqlite:///./digital_greenhouse.db"
     
-    # Redis/Caching
-    redis_url: str = "redis://localhost:6379/0"
+    # In-memory Caching
     cache_ttl_seconds: int = 300
     
     # External API keys
@@ -52,9 +50,8 @@ class Settings(BaseSettings):
     rate_limit_requests: int = 100
     rate_limit_window_minutes: int = 1
     
-    # Background tasks
-    celery_broker_url: str = "redis://localhost:6379/1"
-    celery_result_backend: str = "redis://localhost:6379/2"
+    # Background tasks (asyncio)
+    enable_background_tasks: bool = True
     
     # Monitoring and logging
     log_level: str = "INFO"
@@ -83,18 +80,23 @@ class Settings(BaseSettings):
     enable_spotify_integration: bool = False
     enable_weather_integration: bool = True
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    model_config = {
+        "env_file": "../.env",
+        "env_ignore_empty": True,
+        "case_sensitive": False,
+        "extra": "ignore"
+    }
     
-    @validator('allowed_origins', pre=True)
+    @field_validator('allowed_origins', mode='before')
+    @classmethod
     def parse_cors_origins(cls, v):
         """Parse CORS origins from string or list"""
         if isinstance(v, str):
             return [origin.strip() for origin in v.split(",")]
         return v
     
-    @validator('allowed_file_extensions', pre=True)  
+    @field_validator('allowed_file_extensions', mode='before')  
+    @classmethod
     def parse_file_extensions(cls, v):
         """Parse file extensions from string or list"""
         if isinstance(v, str):
@@ -112,50 +114,19 @@ class Settings(BaseSettings):
         }
     
     @property
-    def redis_config(self) -> Dict[str, Any]:
-        """Redis configuration dictionary"""
+    def background_tasks_config(self) -> Dict[str, Any]:
+        """Background tasks configuration dictionary"""
         return {
-            "url": self.redis_url,
-            "decode_responses": True,
-            "retry_on_timeout": True,
-            "socket_keepalive": True,
-            "socket_keepalive_options": {}
-        }
-    
-    @property
-    def celery_config(self) -> Dict[str, Any]:
-        """Celery configuration dictionary"""
-        return {
-            "broker_url": self.celery_broker_url,
-            "result_backend": self.celery_result_backend,
-            "task_serializer": "json",
-            "accept_content": ["json"],
-            "result_serializer": "json",
-            "timezone": "UTC",
-            "enable_utc": True,
-            "beat_schedule": {
-                "calculate-growth": {
-                    "task": "app.tasks.calculate_project_growth",
-                    "schedule": self.growth_calculation_interval_minutes * 60,
-                },
-                "update-weather": {
-                    "task": "app.tasks.update_weather_conditions", 
-                    "schedule": self.weather_update_interval_minutes * 60,
-                },
-                "sync-external-data": {
-                    "task": "app.tasks.sync_external_data",
-                    "schedule": self.data_sync_interval_hours * 3600,
-                }
-            }
+            "growth_calculation_interval": self.growth_calculation_interval_minutes * 60,
+            "weather_update_interval": self.weather_update_interval_minutes * 60,
+            "data_sync_interval": self.data_sync_interval_hours * 3600,
         }
 
 
 class TestSettings(Settings):
     """Settings for testing environment"""
     
-    database_url: str = "postgresql://postgres:password@localhost:5432/digital_greenhouse_test"
-    async_database_url: str = "postgresql+asyncpg://postgres:password@localhost:5432/digital_greenhouse_test"
-    redis_url: str = "redis://localhost:6379/15"  # Use different Redis DB for tests
+    database_url: str = "sqlite+aiosqlite:///./test_digital_greenhouse.db"
     
     # Disable external integrations in tests
     enable_github_integration: bool = False

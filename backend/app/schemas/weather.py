@@ -2,8 +2,8 @@
 Weather-related Pydantic schemas
 """
 
-from pydantic import BaseModel, Field, ConfigDict, validator
-from typing import Optional, Dict, Any
+from pydantic import BaseModel, Field, ConfigDict, field_validator
+from typing import Optional, Dict, Any, List
 from datetime import datetime
 from enum import Enum
 

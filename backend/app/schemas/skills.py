@@ -2,7 +2,7 @@
 Skills-related Pydantic schemas
 """
 
-from pydantic import BaseModel, Field, ConfigDict, validator
+from pydantic import BaseModel, Field, ConfigDict, field_validator
 from typing import Optional, List, Dict, Any
 from datetime import date, datetime
 from uuid import UUID
@@ -44,7 +44,7 @@ class SkillBase(BaseModel):
     
     # Visual metadata
     icon_url: Optional[str] = Field(None, max_length=500, description="Icon URL")
-    color_hex: Optional[str] = Field(None, regex="^#[0-9A-Fa-f]{6}$", description="Hex color code")
+    color_hex: Optional[str] = Field(None, pattern="^#[0-9A-Fa-f]{6}$", description="Hex color code")
     
     model_config = ConfigDict(
         json_schema_extra={
@@ -84,7 +84,7 @@ class SkillUpdate(BaseModel):
     last_used_date: Optional[date] = None
     learning_velocity: Optional[float] = Field(None, ge=0)
     icon_url: Optional[str] = Field(None, max_length=500)
-    color_hex: Optional[str] = Field(None, regex="^#[0-9A-Fa-f]{6}$")
+    color_hex: Optional[str] = Field(None, pattern="^#[0-9A-Fa-f]{6}$")
 
 
 class SkillResponse(SkillBase, UUIDMixin, TimestampMixin):
@@ -106,9 +106,10 @@ class SkillConnectionBase(BaseModel):
     connection_type: ConnectionType = Field(..., description="Type of connection")
     strength: float = Field(default=0.5, ge=0, le=1, description="Connection strength (0-1)")
     
-    @validator('skill_b_id')
-    def validate_different_skills(cls, v, values):
-        if 'skill_a_id' in values and v == values['skill_a_id']:
+    @field_validator('skill_b_id', mode='after')
+    @classmethod
+    def validate_different_skills(cls, v, info):
+        if info.data and 'skill_a_id' in info.data and v == info.data['skill_a_id']:
             raise ValueError('skill_a_id and skill_b_id must be different')
         return v
 

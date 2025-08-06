@@ -9,7 +9,12 @@ import {
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGardenStore } from '@/stores/gardenStore'
 
-export const NavigationOverlay: React.FC = () => {
+interface NavigationOverlayProps {
+  connected: boolean
+  onNavigate: (mode: string) => void
+}
+
+export const NavigationOverlay: React.FC<NavigationOverlayProps> = ({ connected, onNavigate }) => {
   const { navigationMode, setNavigationMode, ui, openModal } = useGardenStore()
 
   return (

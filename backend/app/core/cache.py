@@ -1,96 +1,72 @@
 """
-Redis caching layer for Digital Greenhouse API
+In-memory caching layer for Digital Greenhouse API
 """
 
+import asyncio
 import json
-import pickle
-from typing import Any, Optional, Union, Dict, List
-from datetime import timedelta
+from typing import Any, Optional, Dict, List
+from datetime import datetime, timedelta
 import logging
+import fnmatch
 
-import redis.asyncio as redis
-from redis.asyncio import Redis
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
 
-class CacheManager:
-    """Redis cache manager with different TTL strategies"""
+class CacheItem:
+    """Cache item with TTL support"""
+    def __init__(self, value: Any, ttl_seconds: Optional[int] = None):
+        self.value = value
+        self.created_at = datetime.now()
+        self.expires_at = None
+        if ttl_seconds:
+            self.expires_at = self.created_at + timedelta(seconds=ttl_seconds)
+    
+    def is_expired(self) -> bool:
+        """Check if cache item is expired"""
+        if self.expires_at is None:
+            return False
+        return datetime.now() > self.expires_at
+
+
+class InMemoryCacheManager:
+    """In-memory cache manager with TTL support"""
     
     def __init__(self):
-        self.redis: Optional[Redis] = None
-        self._connection_pool = None
+        self._cache: Dict[str, CacheItem] = {}
+        self._lock = asyncio.Lock()
     
     async def connect(self):
-        """Initialize Redis connection"""
-        try:
-            self._connection_pool = redis.ConnectionPool.from_url(
-                settings.redis_url,
-                decode_responses=False,  # We handle encoding ourselves
-                retry_on_timeout=True,
-                socket_keepalive=True
-            )
-            self.redis = Redis(connection_pool=self._connection_pool)
-            
-            # Test connection
-            await self.redis.ping()
-            logger.info("Redis connection established")
-            
-        except Exception as e:
-            logger.error(f"Failed to connect to Redis: {e}")
-            raise
+        """Initialize cache (no-op for in-memory)"""
+        logger.info("In-memory cache initialized")
     
     async def disconnect(self):
-        """Close Redis connection"""
-        if self.redis:
-            await self.redis.close()
-        if self._connection_pool:
-            await self._connection_pool.disconnect()
-        logger.info("Redis connection closed")
+        """Close cache (no-op for in-memory)"""
+        async with self._lock:
+            self._cache.clear()
+        logger.info("In-memory cache cleared")
     
-    def _serialize_value(self, value: Any) -> bytes:
-        """Serialize value for Redis storage"""
-        if isinstance(value, (str, int, float)):
-            return str(value).encode('utf-8')
-        elif isinstance(value, (dict, list)):
-            return json.dumps(value, default=str).encode('utf-8')
-        else:
-            return pickle.dumps(value)
-    
-    def _deserialize_value(self, value: bytes) -> Any:
-        """Deserialize value from Redis"""
-        try:
-            # Try JSON first (most common)
-            return json.loads(value.decode('utf-8'))
-        except (json.JSONDecodeError, UnicodeDecodeError):
-            try:
-                # Try string/numeric
-                decoded = value.decode('utf-8')
-                # Try to convert to number if possible
-                if decoded.isdigit():
-                    return int(decoded)
-                try:
-                    return float(decoded)
-                except ValueError:
-                    return decoded
-            except UnicodeDecodeError:
-                # Fall back to pickle
-                return pickle.loads(value)
+    async def _cleanup_expired(self):
+        """Clean up expired cache items"""
+        current_time = datetime.now()
+        expired_keys = [
+            key for key, item in self._cache.items()
+            if item.is_expired()
+        ]
+        for key in expired_keys:
+            del self._cache[key]
     
     async def get(self, key: str) -> Optional[Any]:
         """Get value from cache"""
-        if not self.redis:
-            return None
-        
-        try:
-            value = await self.redis.get(key)
-            if value is None:
+        async with self._lock:
+            await self._cleanup_expired()
+            
+            item = self._cache.get(key)
+            if item is None or item.is_expired():
                 return None
-            return self._deserialize_value(value)
-        except Exception as e:
-            logger.error(f"Cache get error for key {key}: {e}")
-            return None
+            
+            return item.value
     
     async def set(
         self, 
@@ -99,78 +75,65 @@ class CacheManager:
         ttl_seconds: Optional[int] = None
     ) -> bool:
         """Set value in cache with optional TTL"""
-        if not self.redis:
-            return False
-        
-        try:
-            serialized = self._serialize_value(value)
-            if ttl_seconds:
-                await self.redis.setex(key, ttl_seconds, serialized)
-            else:
-                await self.redis.set(key, serialized)
+        async with self._lock:
+            self._cache[key] = CacheItem(value, ttl_seconds)
             return True
-        except Exception as e:
-            logger.error(f"Cache set error for key {key}: {e}")
-            return False
     
     async def delete(self, key: str) -> bool:
         """Delete value from cache"""
-        if not self.redis:
-            return False
-        
-        try:
-            result = await self.redis.delete(key)
-            return result > 0
-        except Exception as e:
-            logger.error(f"Cache delete error for key {key}: {e}")
+        async with self._lock:
+            if key in self._cache:
+                del self._cache[key]
+                return True
             return False
     
     async def exists(self, key: str) -> bool:
         """Check if key exists in cache"""
-        if not self.redis:
-            return False
-        
-        try:
-            return await self.redis.exists(key) > 0
-        except Exception as e:
-            logger.error(f"Cache exists error for key {key}: {e}")
-            return False
+        async with self._lock:
+            await self._cleanup_expired()
+            item = self._cache.get(key)
+            return item is not None and not item.is_expired()
     
     async def clear_pattern(self, pattern: str) -> int:
         """Clear all keys matching pattern"""
-        if not self.redis:
-            return 0
-        
-        try:
-            keys = await self.redis.keys(pattern)
-            if keys:
-                return await self.redis.delete(*keys)
-            return 0
-        except Exception as e:
-            logger.error(f"Cache clear pattern error for {pattern}: {e}")
-            return 0
+        async with self._lock:
+            # Convert Redis-style pattern to fnmatch pattern
+            fnmatch_pattern = pattern.replace("*", "*")
+            
+            matching_keys = [
+                key for key in self._cache.keys()
+                if fnmatch.fnmatch(key, fnmatch_pattern)
+            ]
+            
+            for key in matching_keys:
+                del self._cache[key]
+            
+            return len(matching_keys)
     
     async def increment(self, key: str, amount: int = 1) -> Optional[int]:
         """Increment numeric value"""
-        if not self.redis:
-            return None
-        
-        try:
-            return await self.redis.incrby(key, amount)
-        except Exception as e:
-            logger.error(f"Cache increment error for key {key}: {e}")
-            return None
+        async with self._lock:
+            item = self._cache.get(key)
+            if item is None or item.is_expired():
+                new_value = amount
+            else:
+                try:
+                    current_value = int(item.value)
+                    new_value = current_value + amount
+                except (ValueError, TypeError):
+                    return None
+            
+            self._cache[key] = CacheItem(new_value, None)
+            return new_value
     
-    async def get_ttl(self, key: str) -> Optional[int]:
-        """Get time to live for key"""
-        if not self.redis:
-            return None
-        
-        try:
-            return await self.redis.ttl(key)
-        except Exception as e:
-            logger.error(f"Cache TTL error for key {key}: {e}")
-            return None
+    async def get_cache_stats(self) -> Dict[str, Any]:
+        """Get cache statistics"""
+        async with self._lock:
+            await self._cleanup_expired()
+            return {
+                "total_keys": len(self._cache),
+                "memory_usage_items": len(self._cache)
+            }
 
 
 # Cache TTL configurations
@@ -264,7 +227,7 @@ class CacheKeys:
 
 
 # Global cache manager instance
-cache_manager = CacheManager()
+cache_manager = InMemoryCacheManager()
 
 
 # Convenience functions

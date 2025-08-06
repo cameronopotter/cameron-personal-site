@@ -10,7 +10,7 @@ import {
   Sky,
   Stars
 } from '@react-three/drei'
-import { EffectComposer, Bloom, DepthOfField, Vignette } from '@react-three/postprocessing'
+// import { EffectComposer, Bloom, DepthOfField, Vignette } from '@react-three/postprocessing'
 import { Vector3, Color, Fog } from 'three'
 import { motion } from 'framer-motion'
 import { Box, CircularProgress, Typography } from '@mui/material'
@@ -278,8 +278,8 @@ const Scene: React.FC = () => {
         />
       )}
       
-      {/* Post-processing Effects */}
-      {settings.complexityLevel > 2 && (
+      {/* Post-processing Effects - Disabled for compatibility */}
+      {/* {settings.complexityLevel > 2 && (
         <EffectComposer>
           <Bloom
             intensity={0.5}
@@ -299,7 +299,7 @@ const Scene: React.FC = () => {
             darkness={0.5}
           />
         </EffectComposer>
-      )}
+      )} */}
     </>
   )
 }

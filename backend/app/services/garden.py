@@ -44,53 +44,68 @@ class GardenService:
     ) -> GardenState:
         """Get complete garden ecosystem state with personalization"""
         
-        # Get all active projects
-        query = select(Project).where(Project.status == 'active')
-        if season:
-            # Add season filtering logic if needed
-            pass
-        
-        result = await self.db.execute(query.order_by(Project.planted_date))
-        projects = result.scalars().all()
-        
-        # Convert to response models
-        project_responses = [ProjectResponse.model_validate(p) for p in projects]
-        
-        # Get skills constellations
-        constellations = await self._get_skills_constellations()
-        
-        # Get current weather
-        current_weather = await self.weather_service.get_current_weather()
-        
-        # Calculate garden metadata
-        garden_age_days = await self._calculate_garden_age()
-        total_growth_events = await self._count_total_growth_events()
-        active_projects_count = len([p for p in projects if p.status == 'active'])
-        
-        # Get environmental conditions
-        ambient_conditions = await self._calculate_ambient_conditions(current_weather)
-        
-        # Get personalized content if visitor session provided
-        personalized_content = None
-        if visitor_session:
-            personalized_content = await self._get_personalized_content(visitor_session)
-        
-        return GardenState(
-            success=True,
-            message="Garden state retrieved successfully",
-            projects=project_responses,
-            skills_constellations=constellations,
-            current_weather=current_weather,
-            garden_age_days=garden_age_days,
-            total_growth_events=total_growth_events,
-            active_projects_count=active_projects_count,
-            season=self._get_current_season(),
-            time_of_day=self._get_time_of_day(),
-            ambient_conditions=ambient_conditions,
-            personalized_highlights=personalized_content.get('highlights') if personalized_content else None,
-            recommended_projects=personalized_content.get('recommended_projects') if personalized_content else None,
-            visitor_journey_suggestion=personalized_content.get('journey_suggestion') if personalized_content else None
-        )
+        try:
+            # Get all active projects
+            query = select(Project).where(Project.status == 'active')
+            if season:
+                # Add season filtering logic if needed
+                pass
+            
+            result = await self.db.execute(query.order_by(Project.planted_date))
+            projects = result.scalars().all()
+            
+            # Convert to response models
+            project_responses = []
+            for p in projects:
+                try:
+                    project_responses.append(self._convert_project_to_response(p))
+                except Exception as e:
+                    logger.error(f"Error converting project {p.name}: {e}")
+                    continue
+            
+            # Get skills constellations
+            constellations = await self._get_skills_constellations()
+            
+            # Get current weather
+            try:
+                current_weather = await self.weather_service.get_current_weather()
+            except Exception as e:
+                logger.error(f"Error getting weather: {e}")
+                # Create default weather response
+                current_weather = self._create_default_weather_response()
+            
+            # Calculate garden metadata
+            garden_age_days = await self._calculate_garden_age()
+            total_growth_events = await self._count_total_growth_events()
+            active_projects_count = len([p for p in projects if p.status == 'active'])
+            
+            # Get environmental conditions
+            ambient_conditions = await self._calculate_ambient_conditions(current_weather)
+            
+            # Get personalized content if visitor session provided
+            personalized_content = None
+            if visitor_session:
+                personalized_content = await self._get_personalized_content(visitor_session)
+            
+            return GardenState(
+                success=True,
+                message="Garden state retrieved successfully",
+                projects=project_responses,
+                skills_constellations=constellations,
+                current_weather=current_weather,
+                garden_age_days=garden_age_days,
+                total_growth_events=total_growth_events,
+                active_projects_count=active_projects_count,
+                season=self._get_current_season(),
+                time_of_day=self._get_time_of_day(),
+                ambient_conditions=ambient_conditions,
+                personalized_highlights=personalized_content.get('highlights') if personalized_content else None,
+                recommended_projects=personalized_content.get('recommended_projects') if personalized_content else None,
+                visitor_journey_suggestion=personalized_content.get('journey_suggestion') if personalized_content else None
+            )
+        except Exception as e:
+            logger.error(f"Error in get_complete_garden_state: {e}")
+            raise e
     
     async def get_garden_summary(self) -> GardenSummaryResponse:
         """Get condensed garden overview"""
@@ -193,7 +208,7 @@ class GardenService:
         return PlantedSeedResponse(
             success=True,
             message="Seed planted successfully",
-            project=ProjectResponse.model_validate(project),
+            project=self._convert_project_to_response(project),
             growth_triggered=True,
             estimated_growth_time=self._estimate_growth_time(project.plant_type)
         )
@@ -507,3 +522,65 @@ class GardenService:
         """Calculate visitor engagement vitality"""
         # This would analyze visitor interaction patterns
         return 0.85  # Placeholder
+
+    def _convert_project_to_response(self, project: Project) -> ProjectResponse:
+        """Convert SQLAlchemy Project model to Pydantic ProjectResponse"""
+        import json
+        
+        # Parse technologies from JSON string to list
+        technologies = []
+        if project.technologies:
+            try:
+                technologies = json.loads(project.technologies.replace("'", '"'))
+            except:
+                technologies = []
+        
+        return ProjectResponse(
+            id=project.id,
+            created_at=project.created_at,
+            updated_at=project.updated_at,
+            name=project.name,
+            description=project.description,
+            github_repo=project.github_repo,
+            demo_url=project.demo_url,
+            plant_type=project.plant_type,
+            growth_stage=project.growth_stage,
+            planted_date=project.planted_date,
+            position_x=project.position_x,
+            position_y=project.position_y,
+            position_z=project.position_z,
+            technologies=technologies,
+            status=project.status,
+            visibility=project.visibility,
+            commit_count=project.commit_count,
+            lines_of_code=project.lines_of_code,
+            complexity_score=project.complexity_score,
+            visitor_interactions=project.visitor_interactions
+        )
+
+    def _create_default_weather_response(self):
+        """Create a default weather response when weather service fails"""
+        from app.schemas.weather import WeatherStateResponse, WeatherType, TimeOfDay, Season
+        from datetime import datetime
+        from uuid import uuid4
+        
+        return WeatherStateResponse(
+            id=str(uuid4()),
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow(),
+            weather_type=WeatherType.SUNNY,
+            intensity=0.7,
+            github_commits_today=0,
+            coding_hours_today=0.0,
+            music_mood=None,
+            actual_weather=None,
+            productivity_score=0.5,
+            creativity_index=0.5,
+            stress_level=0.3,
+            time_of_day=TimeOfDay.DAY,
+            season=Season.SUMMER,
+            started_at=datetime.utcnow(),
+            ended_at=None,
+            is_active=True,
+            duration_minutes=None
+        )

@@ -6,7 +6,7 @@ from sqlalchemy import (
     Column, String, Text, Integer, Float, DateTime, Boolean,
     CheckConstraint, Index, func
 )
-from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSONB
+# No PostgreSQL-specific types needed for SQLite
 from .base import Base, BaseModel
 
 
@@ -26,13 +26,13 @@ class VisitorSession(Base, BaseModel):
     country_code = Column(String(2))
 
     # Garden interaction data
-    projects_viewed = Column(ARRAY(UUID))                    # Array of project UUIDs
-    time_spent_per_project = Column(JSONB)                   # {project_id: seconds}
-    interaction_events = Column(ARRAY(JSONB))                # Array of interaction event objects
+    projects_viewed = Column(Text)                          # JSON array of project UUIDs
+    time_spent_per_project = Column(Text)                   # JSON: {project_id: seconds}
+    interaction_events = Column(Text)                       # JSON array of interaction event objects
 
     # Navigation and journey tracking
     entry_point = Column(String(255))                        # Referrer or entry URL
-    journey_path = Column(ARRAY(Text))                       # Sequence of areas visited
+    journey_path = Column(Text)                             # JSON array of areas visited
     exit_point = Column(String(255))                         # Last area before leaving
 
     # Engagement metrics

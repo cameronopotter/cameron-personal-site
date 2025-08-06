@@ -4,7 +4,8 @@ Configuration settings for external API integrations.
 
 from typing import Dict, Any, List
 from dataclasses import dataclass, field
-from pydantic import BaseSettings, Field
+from pydantic_settings import BaseSettings
+from pydantic import Field
 
 from ..core.config import settings
 

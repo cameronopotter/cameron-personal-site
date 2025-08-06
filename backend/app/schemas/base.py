@@ -93,7 +93,7 @@ class PaginatedResponse(BaseResponse):
 class SortParams(BaseModel):
     """Common sorting parameters"""
     sort_by: str = Field("created_at", description="Field to sort by")
-    sort_order: str = Field("desc", regex="^(asc|desc)$", description="Sort order")
+    sort_order: str = Field("desc", pattern="^(asc|desc)$", description="Sort order")
 
 
 class DateRangeFilter(BaseModel):

@@ -8,7 +8,7 @@ export const PerformanceMonitor: React.FC = () => {
   const renderTimes = useRef<number[]>([])
   
   const { gl, scene, camera } = useThree()
-  const { updatePerformanceMetrics, enableOptimizedMode, performance } = useGardenStore()
+  const { updatePerformanceMetrics, enableOptimizedMode, performance: performanceSettings } = useGardenStore()
 
   useFrame((state, delta) => {
     frameCount.current++
@@ -44,7 +44,7 @@ export const PerformanceMonitor: React.FC = () => {
       updatePerformanceMetrics(metrics)
       
       // Auto-optimize if performance drops
-      if (fps < 25 && !performance.isOptimizedMode) {
+      if (fps < 25 && !performanceSettings.isOptimizedMode) {
         enableOptimizedMode()
         console.warn('Performance degraded, enabling optimized mode')
       }

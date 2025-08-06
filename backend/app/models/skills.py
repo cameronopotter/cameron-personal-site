@@ -6,7 +6,7 @@ from sqlalchemy import (
     Column, String, Text, Integer, Float, Date, DateTime, Boolean,
     ForeignKey, CheckConstraint, Index, UniqueConstraint, func
 )
-from sqlalchemy.dialects.postgresql import UUID
+# No PostgreSQL-specific types needed for SQLite
 from sqlalchemy.orm import relationship
 from .base import Base, BaseModel
 import uuid
@@ -81,12 +81,12 @@ class SkillConnection(Base, BaseModel):
 
     # Connected skills
     skill_a_id = Column(
-        UUID(as_uuid=True), 
+        String(36), 
         ForeignKey('skills.id', ondelete='CASCADE'),
         nullable=False
     )
     skill_b_id = Column(
-        UUID(as_uuid=True),
+        String(36),
         ForeignKey('skills.id', ondelete='CASCADE'), 
         nullable=False
     )

@@ -1,6 +1,6 @@
 # Digital Greenhouse Backend API
 
-A comprehensive FastAPI backend powering an interactive 3D personal portfolio site with real-time growth simulation, weather systems, and visitor analytics.
+A streamlined FastAPI backend powering an interactive 3D personal portfolio site with real-time growth simulation, weather systems, and visitor analytics.
 
 ## 🌱 Features
 
@@ -10,73 +10,59 @@ A comprehensive FastAPI backend powering an interactive 3D personal portfolio si
 - **Skills Constellation**: Interactive skill visualization with connection mapping
 - **Visitor Analytics**: Privacy-focused engagement tracking and behavioral analysis
 - **WebSocket Updates**: Real-time garden state synchronization
-- **Background Tasks**: Automated growth calculations and data synchronization
-- **Caching Layer**: Redis-powered performance optimization
-- **External Integrations**: GitHub, Spotify, Weather APIs
+- **Background Tasks**: Lightweight asyncio-based task scheduling
+- **Caching Layer**: In-memory caching for optimal performance
+- **External Integrations**: Optional GitHub integration with sample data fallback
 
-## 🏗️ Architecture
+## 🏗️ Simple Architecture
 
 - **FastAPI**: Async Python web framework
-- **PostgreSQL**: Primary database with UUID support
-- **Redis**: Caching and message broker
-- **Celery**: Background task processing
+- **SQLite**: Lightweight database (no setup required!)
+- **In-Memory Caching**: Zero-config caching system
+- **Asyncio Tasks**: Built-in background processing
 - **SQLAlchemy 2.0**: Modern async ORM
-- **Alembic**: Database migrations
-- **Docker**: Containerized deployment
+- **Sample Data**: Rich demo data when GitHub not configured
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Python 3.11+
-- PostgreSQL 15+
-- Redis 7+
-- Docker & Docker Compose (optional)
+- Python 3.11+ (that's it!)
 
-### Local Development
+### Super Simple Setup
 
-1. **Clone and setup**:
+1. **Install dependencies**:
    ```bash
    cd backend
-   cp .env.example .env
-   # Edit .env with your configuration
-   ```
-
-2. **Install dependencies**:
-   ```bash
    pip install -r requirements.txt
    ```
 
-3. **Database setup**:
+2. **Run the server**:
    ```bash
-   # Create database
-   createdb digital_greenhouse
-   
-   # Run migrations
-   alembic upgrade head
+   python run_dev.py
    ```
 
-4. **Start services**:
-   ```bash
-   # Terminal 1: API Server
-   python scripts/run_dev.py
-   
-   # Terminal 2: Celery Worker
-   python scripts/run_celery.py worker
-   
-   # Terminal 3: Celery Beat (optional)
-   python scripts/run_celery.py beat
-   ```
+3. **That's it!** 🎉
+   - API: http://localhost:8000
+   - Interactive Docs: http://localhost:8000/docs
+   - Health Check: http://localhost:8000/health
 
-### Docker Development
+The system will:
+- ✅ Create SQLite database automatically
+- ✅ Generate rich sample data on first run
+- ✅ Start background tasks for growth simulation
+- ✅ Enable real-time WebSocket updates
 
+### Optional Configuration
+
+Create `.env` file for GitHub integration:
 ```bash
-# Start all services
-docker-compose up
-
-# API will be available at http://localhost:8000
-# Documentation at http://localhost:8000/docs
+cp .env.example .env
+# Edit .env to add your GitHub token (optional)
 ```
+
+**Without GitHub token**: Uses rich sample data
+**With GitHub token**: Syncs real repository data
 
 ## 📊 API Endpoints
 
@@ -102,35 +88,37 @@ docker-compose up
 
 ## 🔧 Configuration
 
-Key environment variables:
+Key environment variables (all optional):
 
 ```bash
-# Database
-DATABASE_URL=postgresql://user:pass@localhost/digital_greenhouse
-REDIS_URL=redis://localhost:6379/0
+# Application Security
+SECRET_KEY=your-secret-key-here
+ADMIN_PASSWORD=your-admin-password
 
 # External APIs (optional)
 GITHUB_TOKEN=your-github-token
-SPOTIFY_CLIENT_ID=your-spotify-client-id
-WEATHER_API_KEY=your-weather-api-key
+GITHUB_USERNAME=your-github-username
 
-# Features
+# Features (defaults to true)
 ENABLE_GITHUB_INTEGRATION=true
 ENABLE_WEBSOCKETS=true
 ENABLE_ANALYTICS=true
+ENABLE_BACKGROUND_TASKS=true
 ```
 
 See `.env.example` for complete configuration options.
 
 ## 🎯 Background Tasks
 
-The system runs several automated background tasks:
+The system runs lightweight asyncio background tasks:
 
 - **Growth Calculation**: Updates project growth stages every 15 minutes
-- **Weather Updates**: Refreshes garden weather based on activity
-- **Data Synchronization**: Fetches latest data from external APIs
-- **Analytics Processing**: Aggregates visitor behavior patterns
-- **Maintenance**: Cleans up old sessions and optimizes database
+- **Weather Updates**: Refreshes garden weather based on activity  
+- **Data Synchronization**: Syncs from GitHub API when configured
+- **Analytics Processing**: Built-in visitor behavior insights
+- **Sample Data**: Auto-generates demo data on first run
+
+All tasks run in-process with zero external dependencies!
 
 ## 🔐 Security & Privacy
 
@@ -156,9 +144,10 @@ pytest tests/integration/
 ## 📈 Monitoring
 
 - **Health Checks**: `/health` endpoint with component status
-- **Metrics**: Basic metrics at `/metrics`
+- **Metrics**: `/metrics` endpoint with background task status
+- **Admin Controls**: Manual task triggers at `/admin/tasks/*`
+- **Sample Data**: Refresh demo data at `/admin/sample-data/refresh`
 - **Logging**: Structured logging with configurable levels
-- **Error Tracking**: Optional Sentry integration
 
 ## 🚀 Deployment
 
@@ -219,18 +208,18 @@ alembic downgrade -1
 
 - **Async Throughout**: Full async/await pattern for maximum performance
 - **Modern SQLAlchemy**: Uses 2.0 syntax with async sessions
-- **Comprehensive Caching**: Multi-layer caching with appropriate TTLs
+- **In-Memory Caching**: Zero-config caching with TTL support
 - **Growth Simulation**: Sophisticated algorithms considering multiple factors
 - **Privacy by Design**: Minimal data collection with automatic cleanup
-- **Extensible**: Plugin-friendly architecture for new integrations
+- **Zero Setup**: Works immediately with no external dependencies
 - **Production Ready**: Comprehensive error handling, logging, and monitoring
 
 ## 📚 Architecture Decisions
 
 - **FastAPI**: Modern, fast, with excellent async support and automatic OpenAPI
-- **PostgreSQL**: Robust ACID compliance, excellent JSON support, UUID native support
-- **Redis**: High performance caching and message broker
-- **Celery**: Mature, reliable background task processing
+- **SQLite**: Zero-config, file-based database perfect for single-instance deployments
+- **In-Memory Cache**: Eliminates Redis dependency while maintaining performance
+- **Asyncio Tasks**: Built-in Python task scheduling replaces Celery complexity
 - **Pydantic**: Runtime type validation and serialization
-- **Alembic**: Database migrations with rollback support
-- **Docker**: Consistent deployment across environments
+- **Sample Data**: Rich demo content eliminates external API dependencies
+- **Single Binary**: Everything runs in one process for maximum simplicity

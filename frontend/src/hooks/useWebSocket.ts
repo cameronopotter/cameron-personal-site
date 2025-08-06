@@ -3,13 +3,15 @@ import { useGardenStore } from '@/stores/gardenStore'
 import type { WebSocketMessage } from '@/types'
 
 interface UseWebSocketReturn {
-  isConnected: boolean
+  connected: boolean
+  lastMessage: string | null
   error: string | null
   reconnect: () => void
 }
 
 export const useWebSocket = (url?: string): UseWebSocketReturn => {
   const [isConnected, setIsConnected] = useState(false)
+  const [lastMessage, setLastMessage] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const wsRef = useRef<WebSocket | null>(null)
   const reconnectTimeoutRef = useRef<NodeJS.Timeout>()
@@ -54,6 +56,7 @@ export const useWebSocket = (url?: string): UseWebSocketReturn => {
       
       ws.onmessage = (event) => {
         try {
+          setLastMessage(event.data)
           const message: WebSocketMessage = JSON.parse(event.data)
           handleWebSocketMessage(message)
         } catch (err) {
@@ -165,7 +168,8 @@ export const useWebSocket = (url?: string): UseWebSocketReturn => {
   }, [isConnected])
   
   return {
-    isConnected,
+    connected: isConnected,
+    lastMessage,
     error,
     reconnect
   }

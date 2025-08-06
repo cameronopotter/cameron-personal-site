@@ -6,7 +6,7 @@ Main application entry point with comprehensive setup
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.gzip import GzipMiddleware
+from starlette.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
 import time
 import logging
@@ -16,6 +16,8 @@ from app.core.config import settings
 from app.core.database import init_database, close_database, check_database_connection
 from app.core.cache import cache_manager
 from app.api import api_router
+from app.background_tasks import start_background_tasks, stop_background_tasks
+from app.sample_data import init_sample_data
 
 # Configure logging
 logging.basicConfig(
@@ -35,18 +37,20 @@ async def lifespan(app: FastAPI):
         # Initialize database
         await init_database()
         
-        # Initialize Redis cache
+        # Initialize in-memory cache
         await cache_manager.connect()
         
-        # Check all connections
+        # Check database connection
         db_healthy = await check_database_connection()
-        cache_healthy = await cache_manager.redis.ping() if cache_manager.redis else False
         
         if not db_healthy:
             raise Exception("Database connection failed")
         
-        if not cache_healthy:
-            logger.warning("Redis connection failed - caching will be disabled")
+        # Initialize sample data if needed
+        await init_sample_data()
+        
+        # Start background tasks
+        await start_background_tasks()
         
         logger.info("🚀 Digital Greenhouse API startup complete!")
         
@@ -60,6 +64,7 @@ async def lifespan(app: FastAPI):
     logger.info("🌅 Digital Greenhouse API shutting down...")
     
     try:
+        await stop_background_tasks()
         await cache_manager.disconnect()
         await close_database()
         logger.info("👋 Digital Greenhouse API shutdown complete!")
@@ -89,7 +94,7 @@ app.add_middleware(
 )
 
 app.add_middleware(
-    GzipMiddleware,
+    GZipMiddleware,
     minimum_size=1000
 )
 
@@ -189,19 +194,13 @@ async def health_check() -> Dict[str, Any]:
         }
         health_status["status"] = "degraded"
     
-    # Check Redis cache
+    # Check in-memory cache
     try:
-        if cache_manager.redis:
-            cache_healthy = await cache_manager.redis.ping()
-            health_status["components"]["cache"] = {
-                "status": "healthy" if cache_healthy else "unhealthy",
-                "details": "Redis connection verified" if cache_healthy else "Redis connection failed"
-            }
-        else:
-            health_status["components"]["cache"] = {
-                "status": "disabled",
-                "details": "Redis not configured"
-            }
+        cache_stats = await cache_manager.get_cache_stats()
+        health_status["components"]["cache"] = {
+            "status": "healthy",
+            "details": f"In-memory cache active with {cache_stats.get('total_keys', 0)} keys"
+        }
     except Exception as e:
         health_status["components"]["cache"] = {
             "status": "unhealthy",
@@ -225,6 +224,10 @@ async def health_check() -> Dict[str, Any]:
 @app.get("/metrics")
 async def metrics() -> Dict[str, Any]:
     """Basic metrics endpoint for monitoring"""
+    from app.background_tasks import get_all_tasks_status
+    
+    task_statuses = await get_all_tasks_status()
+    
     return {
         "app_info": {
             "name": settings.app_name,
@@ -237,10 +240,85 @@ async def metrics() -> Dict[str, Any]:
                 "github": settings.enable_github_integration,
                 "spotify": settings.enable_spotify_integration,
                 "weather": settings.enable_weather_integration,
-                "websockets": settings.enable_websockets
+                "websockets": settings.enable_websockets,
+                "background_tasks": settings.enable_background_tasks
+            }
+        },
+        "background_tasks": {
+            "total_tasks": len(task_statuses),
+            "task_summary": {
+                task_name: {
+                    "status": result.status.value,
+                    "last_run": result.completed_at.isoformat() if result.completed_at else None,
+                    "duration": result.duration_seconds
+                }
+                for task_name, result in task_statuses.items()
             }
         }
     }
+
+
+# Admin endpoints for manual task execution
+@app.post("/admin/tasks/growth-calculation")
+async def trigger_growth_calculation():
+    """Manually trigger project growth calculation"""
+    from app.background_tasks import execute_growth_calculation
+    
+    result = await execute_growth_calculation()
+    return {
+        "success": True,
+        "task_name": result.task_name,
+        "status": result.status.value,
+        "started_at": result.started_at.isoformat()
+    }
+
+
+@app.post("/admin/tasks/weather-update")
+async def trigger_weather_update():
+    """Manually trigger weather update"""
+    from app.background_tasks import execute_weather_update
+    
+    result = await execute_weather_update()
+    return {
+        "success": True,
+        "task_name": result.task_name,
+        "status": result.status.value,
+        "started_at": result.started_at.isoformat()
+    }
+
+
+@app.post("/admin/tasks/data-sync")
+async def trigger_data_sync():
+    """Manually trigger external data sync"""
+    from app.background_tasks import execute_data_sync
+    
+    result = await execute_data_sync()
+    return {
+        "success": True,
+        "task_name": result.task_name,
+        "status": result.status.value,
+        "started_at": result.started_at.isoformat()
+    }
+
+
+@app.post("/admin/sample-data/refresh")
+async def refresh_sample_data():
+    """Refresh sample data (admin function)"""
+    from app.sample_data import refresh_sample_data
+    
+    try:
+        result = await refresh_sample_data()
+        return {
+            "success": True,
+            "message": "Sample data refreshed successfully",
+            "details": result
+        }
+    except Exception as e:
+        logger.error(f"Error refreshing sample data: {e}")
+        return {
+            "success": False,
+            "error": str(e)
+        }
 
 
 # Add startup banner

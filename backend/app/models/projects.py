@@ -6,7 +6,7 @@ from sqlalchemy import (
     Column, String, Text, Integer, Float, DateTime, Boolean,
     ForeignKey, CheckConstraint, Index, func
 )
-from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSONB
+# No PostgreSQL-specific types needed for SQLite
 from sqlalchemy.orm import relationship
 from .base import Base, BaseModel
 import uuid
@@ -42,7 +42,7 @@ class Project(Base, BaseModel):
     visitor_interactions = Column(Integer, default=0)
 
     # Technical and organizational metadata
-    technologies = Column(ARRAY(String))  # Array of tech stack items
+    technologies = Column(Text)  # JSON string of tech stack items
     status = Column(String(20), default='active')      # active, archived, featured
     visibility = Column(String(20), default='public')  # public, private, unlisted
 
@@ -78,7 +78,7 @@ class ProjectGrowthLog(Base, BaseModel):
 
     # Link to project
     project_id = Column(
-        UUID(as_uuid=True), 
+        String(36), 
         ForeignKey('projects.id', ondelete='CASCADE'),
         nullable=False
     )
@@ -90,8 +90,8 @@ class ProjectGrowthLog(Base, BaseModel):
     complexity_change = Column(Float, default=0.0)
 
     # External activity data (stored as JSON for flexibility)
-    github_activity = Column(JSONB)      # commits, PRs, issues
-    deployment_events = Column(JSONB)    # deployments, releases
+    github_activity = Column(Text)       # JSON: commits, PRs, issues
+    deployment_events = Column(Text)     # JSON: deployments, releases
 
     # Visitor engagement metrics
     page_views = Column(Integer, default=0)

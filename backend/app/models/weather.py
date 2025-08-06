@@ -6,7 +6,7 @@ from sqlalchemy import (
     Column, String, Float, Integer, DateTime, Boolean,
     CheckConstraint, Index, func
 )
-from sqlalchemy.dialects.postgresql import UUID
+# No PostgreSQL-specific types needed for SQLite
 from .base import Base, BaseModel
 
 

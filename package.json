@@ -1,30 +1,27 @@
 {
   "name": "digital-greenhouse",
   "version": "1.0.0",
-  "description": "Cameron Potter's Interactive Digital Greenhouse - A living, breathing personal site",
+  "description": "Interactive 3D Digital Garden Portfolio - A living, breathing ecosystem showcasing your development journey",
   "private": true,
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
   "scripts": {
-    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
-    "dev:frontend": "cd frontend && npm run dev",
-    "dev:backend": "cd backend && python -m uvicorn app.main:app --reload --port 8000",
-    "build": "cd frontend && npm run build",
-    "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
-    "start:frontend": "cd frontend && npm start",
-    "start:backend": "cd backend && python -m uvicorn app.main:app --port 8000",
-    "setup": "npm install && cd frontend && npm install && cd ../backend && pip install -r requirements.txt",
-    "test": "concurrently \"cd frontend && npm test\" \"cd backend && pytest\"",
-    "lint": "concurrently \"cd frontend && npm run lint\" \"cd backend && ruff check .\"",
-    "format": "concurrently \"cd frontend && npm run format\" \"cd backend && ruff format .\""
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
+    "setup": "./setup.sh",
+    "dev": "./dev.sh",
+    "start": "./dev.sh"
   },
   "engines": {
     "node": ">=18.0.0",
-    "npm": ">=9.0.0"
-  }
+    "npm": ">=9.0.0",
+    "python": ">=3.8.0"
+  },
+  "keywords": [
+    "portfolio",
+    "3d",
+    "interactive",
+    "react",
+    "threejs",
+    "fastapi",
+    "digital-garden"
+  ],
+  "author": "Cameron Potter",
+  "license": "MIT"
 }
