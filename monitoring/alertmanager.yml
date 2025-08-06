@@ -1,0 +1,145 @@
+# Alertmanager configuration for Digital Greenhouse
+# Handles alert routing, grouping, and notifications
+
+global:
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'alerts@digital-greenhouse.dev'
+  smtp_auth_username: 'alerts@digital-greenhouse.dev'
+  smtp_auth_password: '${SMTP_PASSWORD}'
+  smtp_require_tls: true
+
+# Inhibition rules allow to mute a set of alerts given that another alert is firing
+inhibit_rules:
+  - source_matchers:
+      - alertname = 'DigitalGreenhouseDown'
+    target_matchers:
+      - alertname =~ '.*'
+    equal: ['instance']
+
+# Grouping and routing
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 12h
+  receiver: 'web.hook'
+  
+  routes:
+    # Critical alerts - immediate notification
+    - matchers:
+        - severity = 'critical'
+      receiver: 'critical-alerts'
+      group_wait: 10s
+      repeat_interval: 5m
+    
+    # Performance alerts
+    - matchers:
+        - alertname =~ 'DigitalGreenhouse.*Performance.*'
+      receiver: 'performance-alerts'
+      group_wait: 2m
+      repeat_interval: 30m
+    
+    # Security alerts
+    - matchers:
+        - alertname =~ 'DigitalGreenhouse.*Security.*'
+      receiver: 'security-alerts'
+      group_wait: 30s
+      repeat_interval: 15m
+    
+    # Business metric alerts
+    - matchers:
+        - alertname =~ 'DigitalGreenhouse.*Business.*'
+      receiver: 'business-alerts'
+      group_wait: 5m
+      repeat_interval: 2h
+
+# Alert receivers
+receivers:
+  - name: 'web.hook'
+    webhook_configs:
+      - url: 'http://localhost:5001/webhook'
+        send_resolved: true
+
+  - name: 'critical-alerts'
+    email_configs:
+      - to: 'alerts@digital-greenhouse.dev'
+        subject: '🚨 CRITICAL: {{ .GroupLabels.alertname }}'
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Instance: {{ .Labels.instance }}
+          Severity: {{ .Labels.severity }}
+          Started: {{ .StartsAt }}
+          {{ end }}
+        headers:
+          Subject: '🚨 CRITICAL: Digital Greenhouse Alert'
+    
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#alerts-critical'
+        title: '🚨 Critical Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *Instance:* {{ .Labels.instance }}
+          *Severity:* {{ .Labels.severity }}
+          *Started:* {{ .StartsAt }}
+          {{ end }}
+        send_resolved: true
+
+  - name: 'performance-alerts'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#alerts-performance'
+        title: '⚡ Performance Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *Instance:* {{ .Labels.instance }}
+          *Value:* {{ .Annotations.value }}
+          {{ end }}
+        send_resolved: true
+
+  - name: 'security-alerts'
+    email_configs:
+      - to: 'security@digital-greenhouse.dev'
+        subject: '🔒 Security Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Instance: {{ .Labels.instance }}
+          Started: {{ .StartsAt }}
+          {{ end }}
+    
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#alerts-security'
+        title: '🔒 Security Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *Instance:* {{ .Labels.instance }}
+          {{ end }}
+        send_resolved: true
+
+  - name: 'business-alerts'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#alerts-business'
+        title: '📊 Business Metric Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *Value:* {{ .Annotations.value }}
+          {{ end }}
+        send_resolved: true
+
+# Templates for custom alert formatting
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'

@@ -1,0 +1,32 @@
+# Data source provisioning configuration for Grafana
+# Automatically configures Prometheus as the primary data source
+
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    uid: prometheus-uid
+    version: 1
+    
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    editable: true
+    uid: loki-uid
+    version: 1
+    
+  - name: InfluxDB
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    database: digital_greenhouse
+    editable: true
+    uid: influxdb-uid
+    version: 1
+    basicAuth: false

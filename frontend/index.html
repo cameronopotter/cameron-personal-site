@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Cameron Potter's Interactive 3D Digital Garden Portfolio - A unique, immersive experience showcasing projects and skills in a living digital ecosystem" />
+    <meta name="keywords" content="portfolio, 3D, Three.js, React, digital garden, interactive, web development, frontend" />
+    <meta name="author" content="Cameron Potter" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://cameronpotter.dev/" />
+    <meta property="og:title" content="Cameron Potter - Digital Greenhouse Portfolio" />
+    <meta property="og:description" content="Explore Cameron's projects and skills in an immersive 3D digital garden that grows with real data" />
+    <meta property="og:image" content="/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://cameronpotter.dev/" />
+    <meta property="twitter:title" content="Cameron Potter - Digital Greenhouse Portfolio" />
+    <meta property="twitter:description" content="Explore Cameron's projects and skills in an immersive 3D digital garden" />
+    <meta property="twitter:image" content="/twitter-image.jpg" />
+
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="/fonts/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Inter-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    
+    <!-- Google Fonts for fallback -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <!-- Theme color -->
+    <meta name="theme-color" content="#4CAF50" />
+    
+    <!-- PWA manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- iOS PWA support -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Digital Garden" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    
+    <title>Cameron Potter - Digital Greenhouse Portfolio</title>
+    
+    <style>
+      /* Critical CSS for loading screen */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+        color: white;
+        overflow: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      /* Prevent FOUC */
+      #root {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+      }
+      
+      #root.loaded {
+        opacity: 1;
+      }
+      
+      /* Initial loading spinner */
+      .initial-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+        z-index: 9999;
+      }
+      
+      .loader-title {
+        font-size: clamp(2rem, 5vw, 4rem);
+        font-weight: 300;
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, #4CAF50, #2196F3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: center;
+      }
+      
+      .loader-spinner {
+        width: 60px;
+        height: 60px;
+        border: 3px solid rgba(76, 175, 80, 0.1);
+        border-top: 3px solid #4CAF50;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
+      }
+      
+      .loader-text {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1rem;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Accessibility */
+      @media (prefers-reduced-motion: reduce) {
+        .loader-spinner {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Initial loading screen -->
+    <div id="initial-loader" class="initial-loader">
+      <h1 class="loader-title">Digital Greenhouse</h1>
+      <div class="loader-spinner"></div>
+      <p class="loader-text">Growing your garden...</p>
+    </div>
+    
+    <!-- Main React app -->
+    <div id="root"></div>
+    
+    <!-- No JS fallback -->
+    <noscript>
+      <div style="text-align: center; padding: 2rem;">
+        <h1>JavaScript Required</h1>
+        <p>This Digital Greenhouse experience requires JavaScript to be enabled in your browser.</p>
+        <p>Please enable JavaScript and refresh the page to explore the garden.</p>
+      </div>
+    </noscript>
+    
+    <script>
+      // Remove initial loader once React app loads
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          const loader = document.getElementById('initial-loader');
+          const root = document.getElementById('root');
+          
+          if (loader) {
+            loader.style.opacity = '0';
+            loader.style.transition = 'opacity 0.5s ease-out';
+            setTimeout(() => loader.remove(), 500);
+          }
+          
+          if (root) {
+            root.classList.add('loaded');
+          }
+        }, 1000); // Minimum loading time for UX
+      });
+      
+      // Error handling for failed loads
+      window.addEventListener('error', function(e) {
+        console.error('Garden loading error:', e);
+        const loader = document.getElementById('initial-loader');
+        if (loader) {
+          loader.innerHTML = `
+            <h1 class="loader-title">Oops!</h1>
+            <p class="loader-text">The garden failed to load. Please refresh the page.</p>
+            <button onclick="window.location.reload()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+              Refresh Garden
+            </button>
+          `;
+        }
+      });
+    </script>
+    
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
