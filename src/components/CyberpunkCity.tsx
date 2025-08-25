@@ -526,6 +526,13 @@ const SocialMediaHub: React.FC<{ isOpen: boolean; setIsOpen: (open: boolean) => 
   
   const socialLinks = [
     {
+      name: 'Email',
+      url: 'mailto:cameronopotter@gmail.com',
+      icon: <Email sx={{ fontSize: '1rem' }} />,
+      color: '#ea4335',
+      description: 'Direct Contact'
+    },
+    {
       name: 'LinkedIn',
       url: 'https://www.linkedin.com/in/cameron-potter-b4029024a/',
       icon: <Business sx={{ fontSize: '1rem' }} />,
@@ -1217,44 +1224,44 @@ const AINeural: React.FC<{
   const aiResponses = {
     // Personal questions
     about: [
-      'Cameron is a dynamic software engineer at Louddoor with expertise in full-stack development.',
-      'He specializes in PHP, Laravel, Vue.js, and modern web technologies.',
-      'Currently pursuing a BS in Computer Science at Western Governors University (expected 08/2025).',
-      'Based in Columbia, SC, he has a passion for scalable applications and Agile methodologies.'
+      'Cameron Potter is a passionate software engineer at Louddoor, specializing in full-stack development with a focus on creating scalable, efficient solutions. He combines strong technical skills with excellent communication and problem-solving abilities.',
+      'Based in Columbia, SC, Cameron is currently pursuing his BS in Computer Science at Western Governors University (graduating August 2025) while working full-time as a software engineer.',
+      'What sets Cameron apart is his dedication to continuous learning and his ability to work effectively in Agile environments, contributing to both individual projects and collaborative team efforts.',
+      'Cameron has a proven track record of delivering high-quality software solutions, from enterprise applications to innovative web experiences like this interactive portfolio.'
     ],
     skills: [
-      'Cameron\'s technical arsenal includes: C, C++, C#, Python, JavaScript, Java, PHP',
-      'Framework expertise: Laravel, Vue.js, React, TypeScript',
-      'Specializes in full-stack web development and mobile applications',
-      'Strong background in Agile methodologies and technical documentation'
+      '🔥 PROGRAMMING LANGUAGES:\nC • C++ • C# • Python • JavaScript • Java • PHP • SQL\n\n💻 FRAMEWORKS & LIBRARIES:\nLaravel • Vue.js • React • TypeScript • Node.js • Express.js\n\n⚡ SPECIALIZATIONS:\n• Full-stack web development\n• RESTful API design & implementation\n• Database design & optimization\n• Agile methodologies & Scrum',
+      '🛠️ TECHNICAL EXPERTISE:\n• Frontend: React, Vue.js, TypeScript, HTML5, CSS3\n• Backend: PHP/Laravel, Node.js, Python, Java\n• Databases: MySQL, PostgreSQL, MongoDB\n• Tools: Git, Docker, AWS, Linux\n• Testing: Unit testing, Integration testing\n• DevOps: CI/CD pipelines, deployment automation',
+      '🎯 CORE COMPETENCIES:\n• Object-oriented programming & design patterns\n• MVC architecture & clean code principles\n• API integration & third-party services\n• Performance optimization & scalability\n• Technical documentation & code reviews\n• Cross-functional team collaboration'
     ],
     experience: [
-      'Currently Software Engineer at Louddoor (June 2023 - Present)',
-      'Previously Software Engineering Intern at Louddoor (Feb 2023 - June 2023)',
-      'Freelance Software Developer (Dec 2020 - Feb 2023)',
-      'Also interned at Benty working with Java and Python (Sep 2019 - Jan 2023)'
+      '💼 SOFTWARE ENGINEER @ LOUDDOOR\nJune 2023 - Present\n• Full-stack development using PHP, Laravel, Vue.js\n• Code reviews and technical documentation\n• Agile development and sprint planning\n• Feature development and bug resolution',
+      '🎓 SOFTWARE ENGINEERING INTERN @ LOUDDOOR\nFeb 2023 - June 2023\n• Gained hands-on experience in professional software development\n• Worked on real-world projects with senior developers\n• Learned industry best practices and coding standards\n• Contributed to both frontend and backend development',
+      '🚀 FREELANCE SOFTWARE DEVELOPER\nDec 2020 - Feb 2023\n• Developed custom web applications for various clients\n• Managed full project lifecycle from requirements to deployment\n• Built responsive websites and database-driven applications\n• Handled client communications and project management',
+      '⚙️ SOFTWARE ENGINEERING INTERN @ BENTY\nSep 2019 - Jan 2023\n• Worked with Java and Python on enterprise applications\n• Gained experience in software testing and quality assurance\n• Participated in code reviews and team meetings\n• Contributed to documentation and technical specifications'
+    ],
+    projects: [
+      '🌆 CYBERPUNK PORTFOLIO (Current Project)\n• Interactive 3D city built with React & Three.js\n• Real-time GitHub API integration\n• Responsive design with smooth animations\n• Features: AI chat, holographic timeline, social hub',
+      '💼 LOUDDOOR PLATFORM FEATURES\n• Full-stack development using Laravel & Vue.js\n• RESTful API development and integration\n• Database optimization and query performance\n• User authentication and authorization systems',
+      '🔧 CUSTOM WEB APPLICATIONS\n• E-commerce platforms with payment integration\n• Content management systems\n• Database-driven business applications\n• Responsive designs for mobile and desktop'
     ],
     contact: [
-      'Connect with Cameron:',
-      'Email: cameronopotter@gmail.com',
-      'Phone: (803) 603-6393', 
-      'Location: Columbia, SC 29063',
-      'LinkedIn: https://www.linkedin.com/in/cameron-potter-b4029024a/',
-      'GitHub: https://github.com/cameronopotter',
-      'Instagram: https://www.instagram.com/cameronpotter12/'
+      '📧 EMAIL: cameronopotter@gmail.com\n📱 PHONE: (803) 603-6393\n📍 LOCATION: Columbia, SC 29063\n\n🔗 PROFESSIONAL LINKS:\n💼 LinkedIn: linkedin.com/in/cameron-potter-b4029024a/\n👨‍💻 GitHub: github.com/cameronopotter\n📸 Instagram: instagram.com/cameronpotter12/\n\n✨ Feel free to reach out for opportunities, collaboration, or just to connect!'
     ],
     hobbies: [
-      'Cameron enjoys tennis and golf for fitness and strategic thinking',
-      'Passionate about music as a form of creative expression',
-      'Engaged in video gaming for problem-solving and teamwork',
-      'These activities help balance his technical work with personal interests'
+      '🎾 TENNIS & GOLF: Cameron enjoys both sports for their strategic elements and fitness benefits. These activities help him stay sharp and provide a great balance to his technical work.',
+      '🎵 MUSIC: Passionate about music as both a listener and creator. Music serves as a creative outlet and inspiration for his technical projects.',
+      '🎮 GAMING: Enjoys video games for their problem-solving challenges and team coordination aspects, which actually complement his software development skills.',
+      '🌟 These hobbies reflect Cameron\'s well-rounded personality and his belief in maintaining a healthy work-life balance while staying intellectually engaged.'
     ],
     portfolio: [
-      'This cyberpunk portfolio showcases Cameron\'s creative and technical abilities',
-      'Interactive 3D city with clickable buildings representing different sections',
-      'Real-time GitHub API integration for live project data',
-      'Built with React, TypeScript, Framer Motion, and Material-UI',
-      'Features holographic timeline, social media hub, and this AI interface!'
+      '🚀 PORTFOLIO FEATURES:\n• Interactive 3D cyberpunk city environment\n• Clickable buildings reveal different sections\n• Real-time GitHub API for live project data\n• Smooth animations and responsive design\n• AI chat interface (that\'s me!)\n• Holographic career timeline\n• Social media integration hub',
+      '💻 TECHNICAL IMPLEMENTATION:\n• Built with React 18 & TypeScript\n• Three.js for 3D graphics and animations\n• Framer Motion for smooth transitions\n• Material-UI for consistent design\n• Real-time data fetching and caching\n• Optimized for performance and accessibility',
+      '🎨 DESIGN PHILOSOPHY:\n• Cyberpunk aesthetic with professional content\n• Interactive experience that tells Cameron\'s story\n• Mobile-responsive for all devices\n• Focus on user experience and engagement\n• Showcases both technical and creative abilities'
+    ],
+    education: [
+      '🎓 WESTERN GOVERNORS UNIVERSITY\nBachelor of Science in Computer Science\nExpected Graduation: August 2025\n\n📚 RELEVANT COURSEWORK:\n• Data Structures & Algorithms\n• Software Engineering\n• Database Management\n• Web Development\n• Computer Architecture\n• Operating Systems',
+      '🏆 ACADEMIC ACHIEVEMENTS:\n• Maintaining strong GPA while working full-time\n• Hands-on projects in multiple programming languages\n• Focus on practical, industry-relevant skills\n• Self-directed learning and time management'
     ]
   }
   
@@ -1269,30 +1276,38 @@ const AINeural: React.FC<{
     // Simulate AI thinking delay
     setTimeout(() => {
       const lowerInput = userMessage.toLowerCase()
-      let response = 'I\'m still learning! Try asking about Cameron\'s skills, experience, contact info, hobbies, or about this portfolio.'
+      let response = '🤔 I didn\'t quite understand that, but I\'d love to help! Try asking me about:\n\n💻 "What are Cameron\'s skills?"\n🏢 "Tell me about his experience"\n📚 "What about his education?"\n🎯 "Show me his projects"\n📞 "How can I contact Cameron?"\n🎮 "What are his hobbies?"\n🌐 "Tell me about this portfolio"\n\nOr just say "help" for a full menu!'
       
-      // Simple keyword matching for responses
-      if (lowerInput.includes('skill') || lowerInput.includes('tech') || lowerInput.includes('language')) {
+      // Enhanced keyword matching for comprehensive responses
+      if (lowerInput.includes('skill') || lowerInput.includes('tech') || lowerInput.includes('language') || lowerInput.includes('programming') || lowerInput.includes('framework')) {
         response = aiResponses.skills[Math.floor(Math.random() * aiResponses.skills.length)]
-      } else if (lowerInput.includes('experience') || lowerInput.includes('work') || lowerInput.includes('job')) {
+      } else if (lowerInput.includes('experience') || lowerInput.includes('work') || lowerInput.includes('job') || lowerInput.includes('career') || lowerInput.includes('employment')) {
         response = aiResponses.experience[Math.floor(Math.random() * aiResponses.experience.length)]
-      } else if (lowerInput.includes('contact') || lowerInput.includes('email') || lowerInput.includes('phone')) {
-        response = aiResponses.contact.join('\n')
-      } else if (lowerInput.includes('hobby') || lowerInput.includes('interest') || lowerInput.includes('fun') || lowerInput.includes('music') || lowerInput.includes('game')) {
+      } else if (lowerInput.includes('project') && !lowerInput.includes('portfolio')) {
+        response = aiResponses.projects[Math.floor(Math.random() * aiResponses.projects.length)]
+      } else if (lowerInput.includes('education') || lowerInput.includes('school') || lowerInput.includes('university') || lowerInput.includes('degree') || lowerInput.includes('study')) {
+        response = aiResponses.education[Math.floor(Math.random() * aiResponses.education.length)]
+      } else if (lowerInput.includes('contact') || lowerInput.includes('email') || lowerInput.includes('phone') || lowerInput.includes('reach') || lowerInput.includes('connect')) {
+        response = aiResponses.contact[0] // Single comprehensive contact response
+      } else if (lowerInput.includes('hobby') || lowerInput.includes('interest') || lowerInput.includes('fun') || lowerInput.includes('music') || lowerInput.includes('game') || lowerInput.includes('tennis') || lowerInput.includes('golf')) {
         response = aiResponses.hobbies[Math.floor(Math.random() * aiResponses.hobbies.length)]
-      } else if (lowerInput.includes('portfolio') || lowerInput.includes('website') || lowerInput.includes('site') || lowerInput.includes('project')) {
+      } else if (lowerInput.includes('portfolio') || lowerInput.includes('website') || lowerInput.includes('site') || lowerInput.includes('cyberpunk') || lowerInput.includes('interface')) {
         response = aiResponses.portfolio[Math.floor(Math.random() * aiResponses.portfolio.length)]
-      } else if (lowerInput.includes('about') || lowerInput.includes('who') || lowerInput.includes('cameron') || lowerInput.includes('tell me')) {
+      } else if (lowerInput.includes('about') || lowerInput.includes('who') || lowerInput.includes('cameron') || lowerInput.includes('tell me') || lowerInput.includes('introduce')) {
         response = aiResponses.about[Math.floor(Math.random() * aiResponses.about.length)]
-      } else if (lowerInput.includes('hello') || lowerInput.includes('hi') || lowerInput.includes('hey')) {
-        response = 'Hello! I\'m excited to tell you about Cameron Potter. What would you like to know? Try asking about his skills, experience, or interests!'
-      } else if (lowerInput.includes('help') || lowerInput.includes('what can you')) {
-        response = 'I can tell you about Cameron\'s:\n• Technical skills and programming languages\n• Professional experience and career\n• Contact information and social links\n• Personal interests and hobbies\n• This amazing portfolio project!\n\nJust ask me anything!'
+      } else if (lowerInput.includes('hello') || lowerInput.includes('hi') || lowerInput.includes('hey') || lowerInput.includes('greetings')) {
+        response = '👋 Hello! Welcome to Cameron\'s neural interface! I\'m excited to help you learn about Cameron Potter. I can share detailed information about his:\n\n🔹 Technical skills & expertise\n🔹 Professional experience & projects\n🔹 Education & achievements\n🔹 Contact information\n🔹 Personal interests\n🔹 This amazing portfolio!\n\nWhat interests you most?'
+      } else if (lowerInput.includes('help') || lowerInput.includes('what can you') || lowerInput.includes('commands') || lowerInput.includes('what do you know')) {
+        response = '🤖 I\'m Cameron\'s AI assistant with comprehensive knowledge about:\n\n💻 TECHNICAL:\n• Programming languages & frameworks\n• Professional experience at Louddoor\n• Software development projects\n• Technical skills & competencies\n\n🎓 ACADEMIC:\n• Computer Science education at WGU\n• Relevant coursework & achievements\n\n📞 PERSONAL:\n• Contact information & social links\n• Hobbies & interests\n• This interactive portfolio details\n\nTry asking specific questions like "What are Cameron\'s skills?" or "Tell me about his experience!"'
+      } else if (lowerInput.includes('hire') || lowerInput.includes('recruit') || lowerInput.includes('opportunity') || lowerInput.includes('available')) {
+        response = '💼 Cameron is always interested in exciting opportunities! He\'s currently employed at Louddoor but open to discussing:\n\n🚀 Challenging technical roles\n💡 Innovative projects\n🌟 Career advancement opportunities\n📈 Freelance/contract work\n\n📧 Best way to reach him: cameronopotter@gmail.com\n💼 LinkedIn: linkedin.com/in/cameron-potter-b4029024a/\n\nHe responds quickly to professional inquiries!'
+      } else if (lowerInput.includes('why') && (lowerInput.includes('hire') || lowerInput.includes('choose'))) {
+        response = '⭐ WHY CHOOSE CAMERON?\n\n🎯 PROVEN TRACK RECORD:\n• Currently excelling as Software Engineer at Louddoor\n• Strong full-stack development experience\n• Successful freelance project history\n\n💪 TECHNICAL EXCELLENCE:\n• Proficient in modern tech stack (React, Laravel, Python, etc.)\n• Clean, maintainable code practices\n• Agile development experience\n\n🚀 SOFT SKILLS:\n• Excellent communication & collaboration\n• Problem-solving mindset\n• Continuous learner & adaptable\n• Reliable & professional\n\nCameron brings both technical expertise AND the right attitude to any team!'
       }
       
       setMessages(prev => [...prev, { type: 'ai', text: response }])
       setIsThinking(false)
-    }, 1000 + Math.random() * 2000)
+    }, 800 + Math.random() * 1000)
   }
   
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -1335,9 +1350,15 @@ const AINeural: React.FC<{
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.3, rotateZ: -180 }}
-            animate={{ opacity: 1, scale: 1, rotateZ: 0 }}
-            exit={{ opacity: 0, scale: 0.3, rotateZ: -180 }}
+            initial={{ opacity: 0, scale: 0.8, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 50 }}
+            transition={{ 
+              type: "spring", 
+              stiffness: 300, 
+              damping: 30,
+              mass: 0.8 
+            }}
             style={{
               position: 'fixed',
               bottom: '10%',
@@ -1396,8 +1417,8 @@ const AINeural: React.FC<{
                 }}
               >
                 <motion.div
-                  animate={{ opacity: [0.3, 1, 0.3] }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                  animate={{ opacity: 0.8 }}
+                  transition={{ duration: 0 }}
                   style={{
                     width: '8px',
                     height: '8px',
