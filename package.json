@@ -1,27 +1,35 @@
 {
-  "name": "digital-greenhouse",
+  "name": "cyberpunk-portfolio",
   "version": "1.0.0",
-  "description": "Interactive 3D Digital Garden Portfolio - A living, breathing ecosystem showcasing your development journey",
+  "description": "Cameron Potter's Cyberpunk Portfolio",
   "private": true,
+  "type": "module",
   "scripts": {
-    "setup": "./setup.sh",
-    "dev": "./dev.sh",
-    "start": "./dev.sh"
+    "dev": "vite --port 3000",
+    "start": "vite --port 3000",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0",
-    "python": ">=3.8.0"
+  "dependencies": {
+    "@emotion/react": "11.11.1",
+    "@emotion/styled": "11.11.0",
+    "@mui/icons-material": "5.14.19",
+    "@mui/material": "5.14.20",
+    "@react-spring/three": "^10.0.1",
+    "@react-three/drei": "9.88.0",
+    "@react-three/fiber": "8.15.12",
+    "@react-three/postprocessing": "^2.16.0",
+    "framer-motion": "10.16.16",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hotkeys-hook": "^5.1.0",
+    "simplex-noise": "4.0.1",
+    "three": "0.158.0",
+    "zustand": "4.4.7"
   },
-  "keywords": [
-    "portfolio",
-    "3d",
-    "interactive",
-    "react",
-    "threejs",
-    "fastapi",
-    "digital-garden"
-  ],
-  "author": "Cameron Potter",
-  "license": "MIT"
+  "devDependencies": {
+    "@types/three": "0.158.3",
+    "@vitejs/plugin-react": "4.0.4",
+    "vite": "4.5.0"
+  }
 }
