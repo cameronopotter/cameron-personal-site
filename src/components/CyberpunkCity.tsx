@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Box, Typography, IconButton, Fab, TextField } from '@mui/material'
-import { Close, GitHub, Work, Person, Code, VolumeUp, VolumeOff, Terminal } from '@mui/icons-material'
+import { Close, GitHub, Work, Person, Code, VolumeUp, VolumeOff, Terminal, Email, Phone, School, Business, CheckCircle, Bolt, Build, LocalFireDepartment, Inventory, CameraAlt } from '@mui/icons-material'
 
 // Professional Header Component
 const ProfessionalHeader: React.FC<{
@@ -50,7 +50,7 @@ const ProfessionalHeader: React.FC<{
             fontSize: '1.5rem',
             fontWeight: 700,
             letterSpacing: '2px',
-            fontFamily: '"Orbitron", "Roboto Mono", monospace'
+            fontFamily: '"IBM Plex Sans", sans-serif'
           }}>
             CAMERON POTTER
           </Typography>
@@ -58,7 +58,7 @@ const ProfessionalHeader: React.FC<{
             color: '#00ffff',
             fontSize: '0.9rem',
             opacity: 0.8,
-            fontFamily: '"Inter", "Segoe UI", -apple-system, sans-serif',
+            fontFamily: '"IBM Plex Sans", sans-serif',
             fontWeight: 400
           }}>
             Software Engineer • Full-Stack Developer
@@ -205,9 +205,9 @@ const CommandTerminal: React.FC<{ isOpen: boolean; setIsOpen: (open: boolean) =>
     ],
     education: [
       'Academic Background:',
-      '🎓 Western Governors University - Salt Lake City, UT',
+      'Western Governors University - Salt Lake City, UT',
       '   Bachelor of Science in Computer Science (Expected 08/2025)',
-      '🎓 University of South Carolina - Columbia, SC', 
+      'University of South Carolina - Columbia, SC', 
       '   Computer Science (Some College - No Degree)',
       '   Solid foundation in CS fundamentals and programming'
     ],
@@ -217,26 +217,26 @@ const CommandTerminal: React.FC<{ isOpen: boolean; setIsOpen: (open: boolean) =>
       '⛳ Golf player - enjoys focus and strategic thinking', 
       '🎵 Passionate about music as creative expression',
       '🎮 Video gaming for fun, problem-solving, and teamwork',
-      '💻 Personal coding projects and open source contributions',
+      'Personal coding projects and open source contributions',
       '📚 Continuous learning in technology and software development'
     ],
     social: [
       'Social Media & Professional Links:',
-      '💼 LinkedIn: https://www.linkedin.com/in/cameron-potter-b4029024a/',
-      '🐙 GitHub: https://github.com/cameronopotter',
-      '📸 Instagram: https://www.instagram.com/cameronpotter12/',
-      '📧 Email: cameronopotter@gmail.com',
-      '📱 Phone: (803) 603-6393'
+      'LinkedIn: https://www.linkedin.com/in/cameron-potter-b4029024a/',
+      'GitHub: https://github.com/cameronopotter',
+      'Instagram: https://www.instagram.com/cameronpotter12/',
+      'Email: cameronopotter@gmail.com',
+      'Phone: (803) 603-6393'
     ],
     projects: [
       'Recent Coding Projects:',
       '🌃 Cyberpunk Portfolio - Interactive 3D city portfolio',
       '   Built with React, TypeScript, Framer Motion',
-      '🌿 Digital Greenhouse - 3D garden portfolio concept',
+      'Digital Greenhouse - 3D garden portfolio concept',
       '   Three.js, WebGL, immersive 3D experience',
-      '💼 Various client projects during freelance work',
-      '🔧 Open source contributions on GitHub',
-      '📱 Mobile applications for local businesses'
+      'Various client projects during freelance work',
+      'Open source contributions on GitHub',
+      'Mobile applications for local businesses'
     ],
     whoami: [
       'SYSTEM INFO:',
@@ -528,21 +528,21 @@ const SocialMediaHub: React.FC<{ isOpen: boolean; setIsOpen: (open: boolean) => 
     {
       name: 'LinkedIn',
       url: 'https://www.linkedin.com/in/cameron-potter-b4029024a/',
-      icon: '💼',
+      icon: <Business sx={{ fontSize: '1rem' }} />,
       color: '#0077b5',
       description: 'Professional Network'
     },
     {
       name: 'GitHub',
       url: 'https://github.com/cameronopotter',
-      icon: '🐙',
+      icon: <GitHub sx={{ fontSize: '1rem' }} />,
       color: '#333333',
       description: 'Code Repository'
     },
     {
       name: 'Instagram',
       url: 'https://www.instagram.com/cameronpotter12/',
-      icon: '📸',
+      icon: <CameraAlt sx={{ fontSize: '1rem' }} />,
       color: '#e4405f',
       description: 'Personal Life & Interests'
     }
@@ -702,8 +702,11 @@ const SocialMediaHub: React.FC<{ isOpen: boolean; setIsOpen: (open: boolean) => 
 }
 
 // Holographic Career Timeline - Immersive Experience
-const HolographicTimeline: React.FC = React.memo(() => {
-  const [isOpen, setIsOpen] = useState(false)
+const HolographicTimeline: React.FC<{
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
+  closeAllComponents: () => void
+}> = React.memo(({ isOpen, setIsOpen, closeAllComponents }) => {
   const [activeYear, setActiveYear] = useState(2023)
   
   const timelineData = [
@@ -745,7 +748,14 @@ const HolographicTimeline: React.FC = React.memo(() => {
     <>
       {/* Timeline Toggle Button */}
       <Fab
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (isOpen) {
+            setIsOpen(false)
+          } else {
+            closeAllComponents()
+            setIsOpen(true)
+          }
+        }}
         sx={{
           position: 'fixed',
           bottom: 80,
@@ -775,8 +785,10 @@ const HolographicTimeline: React.FC = React.memo(() => {
               position: 'fixed',
               top: '15%',
               left: '10%',
-              width: '600px',
-              height: '500px',
+              width: '80vw',
+              height: '85vh',
+              maxWidth: '900px',
+              maxHeight: '700px',
               zIndex: 1001,
               perspective: '2000px',
               transformStyle: 'preserve-3d'
@@ -790,7 +802,7 @@ const HolographicTimeline: React.FC = React.memo(() => {
                 border: '2px solid #00ffff',
                 borderRadius: '20px',
                 backdropFilter: 'blur(25px)',
-                overflow: 'hidden',
+                overflow: 'visible',
                 boxShadow: '0 0 50px rgba(0,255,255,0.4)',
                 position: 'relative'
               }}
@@ -807,7 +819,7 @@ const HolographicTimeline: React.FC = React.memo(() => {
                 }}
               >
                 <Typography sx={{ color: '#00ffff', fontWeight: 700, fontSize: '1.2rem' }}>
-                  🚀 CAREER.TIMELINE.HOLOGRAM
+                  CAREER.TIMELINE.HOLOGRAM
                 </Typography>
                 <IconButton 
                   onClick={() => setIsOpen(false)}
@@ -818,14 +830,33 @@ const HolographicTimeline: React.FC = React.memo(() => {
               </Box>
               
               {/* 3D Timeline Display */}
-              <Box sx={{ p: 3, height: 'calc(100% - 80px)', position: 'relative' }}>
+              <Box sx={{ 
+                p: 3, 
+                height: 'calc(100% - 80px)', 
+                position: 'relative', 
+                overflowY: 'auto',
+                overflowX: 'hidden',
+                '&::-webkit-scrollbar': {
+                  width: '8px',
+                },
+                '&::-webkit-scrollbar-track': {
+                  background: 'rgba(0,255,255,0.1)',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  background: 'rgba(0,255,255,0.5)',
+                  borderRadius: '4px',
+                  '&:hover': {
+                    background: 'rgba(0,255,255,0.8)',
+                  }
+                }
+              }}>
                 {/* Timeline Track */}
                 <Box
                   sx={{
                     position: 'absolute',
                     left: '50%',
-                    top: '10%',
-                    bottom: '10%',
+                    top: '20px',
+                    height: `${timelineData.length * 220}px`,
                     width: '4px',
                     background: 'linear-gradient(180deg, #00ffff, #0066cc)',
                     boxShadow: '0 0 20px #00ffff',
@@ -847,9 +878,9 @@ const HolographicTimeline: React.FC = React.memo(() => {
                     transition={{ delay: index * 0.2, duration: 0.8 }}
                     style={{
                       position: 'absolute',
-                      left: index % 2 === 0 ? '10%' : '60%',
-                      top: `${20 + index * 20}%`,
-                      width: '200px',
+                      left: index % 2 === 0 ? '5%' : '55%',
+                      top: `${40 + index * 200}px`,
+                      width: '280px',
                       cursor: 'pointer',
                       transformStyle: 'preserve-3d'
                     }}
@@ -1172,8 +1203,11 @@ const BackgroundBuildings: React.FC = () => {
 }
 
 // AI Neural Interface - Interactive Assistant
-const AINeural: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false)
+const AINeural: React.FC<{
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
+  closeAllComponents: () => void
+}> = ({ isOpen, setIsOpen, closeAllComponents }) => {
   const [messages, setMessages] = useState([
     { type: 'ai', text: 'Neural Interface Online. I am CAMERON.AI, your interactive guide to Cameron Potter\'s portfolio. How can I assist you?' }
   ])
@@ -1202,12 +1236,12 @@ const AINeural: React.FC = () => {
     ],
     contact: [
       'Connect with Cameron:',
-      '📧 Email: cameronopotter@gmail.com',
-      '📱 Phone: (803) 603-6393', 
-      '📍 Location: Columbia, SC 29063',
-      '💼 LinkedIn: https://www.linkedin.com/in/cameron-potter-b4029024a/',
-      '🐙 GitHub: https://github.com/cameronopotter',
-      '📸 Instagram: https://www.instagram.com/cameronpotter12/'
+      'Email: cameronopotter@gmail.com',
+      'Phone: (803) 603-6393', 
+      'Location: Columbia, SC 29063',
+      'LinkedIn: https://www.linkedin.com/in/cameron-potter-b4029024a/',
+      'GitHub: https://github.com/cameronopotter',
+      'Instagram: https://www.instagram.com/cameronpotter12/'
     ],
     hobbies: [
       'Cameron enjoys tennis and golf for fitness and strategic thinking',
@@ -1271,7 +1305,14 @@ const AINeural: React.FC = () => {
     <>
       {/* AI Toggle Button */}
       <Fab
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (isOpen) {
+            setIsOpen(false)
+          } else {
+            closeAllComponents()
+            setIsOpen(true)
+          }
+        }}
         sx={{
           position: 'fixed',
           bottom: 20,
@@ -1485,7 +1526,7 @@ const AINeural: React.FC = () => {
                   sx={{
                     '& .MuiInput-root': {
                       color: '#00ff00',
-                      fontFamily: 'monospace',
+                      fontFamily: 'IBM Plex Mono, monospace',
                       fontSize: '0.9rem',
                       '&::before': { borderColor: '#00ff0040' },
                       '&::after': { borderColor: '#00ff00' },
@@ -1514,7 +1555,7 @@ const AINeural: React.FC = () => {
                     }
                   }}
                 >
-                  ⚡
+                  <Bolt />
                 </IconButton>
               </Box>
             </Box>
@@ -1718,7 +1759,7 @@ const CyberpunkBuilding: React.FC<{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            fontFamily: '"Orbitron", "Roboto Mono", monospace'
+            fontFamily: '"IBM Plex Sans", sans-serif'
           }}>
             {name.split(' ').map((word, i) => (
               <Box key={i} component="div">
@@ -2361,6 +2402,26 @@ export const CyberpunkCity: React.FC = () => {
   const [githubData, setGithubData] = useState<any>(null)
   const [terminalOpen, setTerminalOpen] = useState(false)
   const [socialOpen, setSocialOpen] = useState(false)
+  const [timelineOpen, setTimelineOpen] = useState(false)
+  const [aiOpen, setAiOpen] = useState(false)
+  
+  // Function to close all overlays/components
+  const closeAllComponents = useCallback(() => {
+    setActiveSection(null)
+    setTerminalOpen(false)
+    setSocialOpen(false)
+    setTimelineOpen(false)
+    setAiOpen(false)
+    setCameraPosition({ x: 0, y: 0, scale: 1 })
+  }, [])
+  const [githubStats, setGithubStats] = useState({
+    publicRepos: 0,
+    totalCommits: 0,
+    languages: 0,
+    streakDays: 0,
+    languageStats: [] as Array<{ name: string; percentage: number; color: string }>
+  })
+  const [githubLoading, setGithubLoading] = useState(true)
   const audioRef = useRef<HTMLAudioElement>(null)
   const [musicPlaying, setMusicPlaying] = useState(false)
   
@@ -2381,25 +2442,99 @@ export const CyberpunkCity: React.FC = () => {
   }, [])
   const cityRef = useRef<HTMLDivElement>(null)
   
+  // Handle ESC key to close all components
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeAllComponents()
+      }
+    }
+    
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [closeAllComponents])
+  
   // Fetch real GitHub data
   useEffect(() => {
     const fetchGitHubData = async () => {
       try {
+        setGithubLoading(true)
         const [userResponse, reposResponse] = await Promise.all([
           fetch('https://api.github.com/users/cameronopotter'),
-          fetch('https://api.github.com/users/cameronopotter/repos?sort=updated&per_page=10')
+          fetch('https://api.github.com/users/cameronopotter/repos?sort=updated&per_page=100')
         ])
         
         const userData = await userResponse.json()
         const reposData = await reposResponse.json()
         
+        // Calculate language statistics
+        const languageCounts: { [key: string]: number } = {}
+        let totalSize = 0
+        
+        reposData.forEach((repo: any) => {
+          if (repo.language) {
+            languageCounts[repo.language] = (languageCounts[repo.language] || 0) + (repo.size || 1)
+            totalSize += repo.size || 1
+          }
+        })
+        
+        // Get top languages with colors
+        const languageColors: { [key: string]: string } = {
+          'TypeScript': '#007acc',
+          'JavaScript': '#f1e05a',
+          'PHP': '#777bb4',
+          'Python': '#3776ab',
+          'HTML': '#e34c26',
+          'CSS': '#1572b6',
+          'Vue': '#4fc08d',
+          'Java': '#b07219'
+        }
+        
+        const languageStats = Object.entries(languageCounts)
+          .sort(([,a], [,b]) => b - a)
+          .slice(0, 3)
+          .map(([lang, size]) => ({
+            name: lang,
+            percentage: Math.round((size / totalSize) * 100),
+            color: languageColors[lang] || '#666666'
+          }))
+        
+        // Calculate estimated total commits (rough estimate based on repo activity)
+        const totalCommits = reposData.reduce((sum: number, repo: any) => {
+          return sum + (repo.size > 0 ? Math.max(1, Math.floor(repo.size / 10)) : 0)
+        }, 0)
+        
+        // Calculate streak days (mock for now - would need contributions API for real data)
+        const streakDays = Math.floor(Math.random() * 100) + 30 // Mock streak
+        
+        setGithubStats({
+          publicRepos: userData.public_repos || 0,
+          totalCommits: totalCommits,
+          languages: Object.keys(languageCounts).length,
+          streakDays: streakDays,
+          languageStats: languageStats
+        })
+        
         setGithubData({
           user: userData,
           repos: reposData
         })
+        
       } catch (error) {
         console.error('Error fetching GitHub data:', error)
         // Fallback to mock data
+        setGithubStats({
+          publicRepos: 25,
+          totalCommits: 847,
+          languages: 8,
+          streakDays: 67,
+          languageStats: [
+            { name: 'TypeScript', percentage: 45, color: '#007acc' },
+            { name: 'PHP', percentage: 30, color: '#777bb4' },
+            { name: 'Python', percentage: 25, color: '#3776ab' }
+          ]
+        })
+        
         setGithubData({
           user: { login: 'cameronopotter', public_repos: 25, followers: 15 },
           repos: [
@@ -2407,6 +2542,8 @@ export const CyberpunkCity: React.FC = () => {
             { name: 'cyberpunk-portfolio', description: 'Cyberpunk-themed portfolio site', language: 'React', stargazers_count: 3 }
           ]
         })
+      } finally {
+        setGithubLoading(false)
       }
     }
     
@@ -2420,69 +2557,105 @@ export const CyberpunkCity: React.FC = () => {
     date: new Date(Date.now() - i * 86400000).toISOString()
   }))
 
-  const buildings = [
-    {
-      id: 'about',
-      name: 'About Tower',
-      icon: <Person />,
-      position: { x: 120, y: 140 }, // On ground level (140px base)
-      size: { width: 200, height: 280 },
-      color: '#00ffff'
-    },
-    {
-      id: 'projects',
-      name: 'Project Labs',
-      icon: <Code />,
-      position: { x: 450, y: 140 }, // On ground level
-      size: { width: 220, height: 320 },
-      color: '#ff00ff'
-    },
-    {
-      id: 'experience',
-      name: 'Experience Corp',
-      icon: <Work />,
-      position: { x: 750, y: 140 }, // On ground level
-      size: { width: 180, height: 250 },
-      color: '#00ff00'
-    },
-    {
-      id: 'github',
-      name: 'GitHub Station',
-      icon: <GitHub />,
-      position: { x: 1000, y: 140 }, // On ground level
-      size: { width: 240, height: 300 },
-      color: '#ffff00'
-    },
-    {
-      id: 'skills',
-      name: 'Skill Matrix',
-      icon: <Code />,
-      position: { x: 380, y: 140 }, // Moved to avoid overlap with About Tower
-      size: { width: 160, height: 200 },
-      color: '#ff6600'
-    },
-    {
-      id: 'contact',
-      name: 'Contact Terminal', 
-      icon: <Person />,
-      position: { x: 1320, y: 140 }, // On ground level, better spacing
-      size: { width: 140, height: 180 },
-      color: '#9900ff'
+  // Calculate responsive building positions based on screen width
+  const getResponsiveBuildings = () => {
+    const screenWidth = window.innerWidth
+    const minMargin = 60 // Minimum margin on each side
+    const availableWidth = screenWidth - (minMargin * 2)
+    const buildingCount = 5
+    
+    // Base building widths
+    const baseBuildingWidths = [200, 240, 200, 240, 220]
+    const totalBaseBuildingWidth = baseBuildingWidths.reduce((sum, width) => sum + width, 0)
+    
+    // Calculate scale factor to fit all buildings
+    const maxScale = 1
+    const minScale = 0.6 // Don't shrink buildings smaller than 60%
+    const requiredWidth = totalBaseBuildingWidth + (buildingCount - 1) * 20 // 20px minimum spacing
+    const scale = Math.min(maxScale, Math.max(minScale, availableWidth / requiredWidth))
+    
+    // Calculate actual spacing after scaling
+    const scaledBuildingWidth = totalBaseBuildingWidth * scale
+    const remainingSpace = availableWidth - scaledBuildingWidth
+    const spacing = Math.max(15, remainingSpace / (buildingCount - 1)) // Minimum 15px spacing
+    
+    let currentX = minMargin // Start position
+    
+    return [
+      {
+        id: 'about',
+        name: 'About Tower',
+        icon: <Person />,
+        position: { x: currentX, y: 140 },
+        size: { width: 200 * scale, height: 280 * scale },
+        color: '#00ffff'
+      },
+      {
+        id: 'projects',
+        name: 'Project Labs',
+        icon: <Code />,
+        position: { x: currentX += (200 * scale + spacing), y: 140 },
+        size: { width: 240 * scale, height: 300 * scale },
+        color: '#ff00ff'
+      },
+      {
+        id: 'experience',
+        name: 'Experience Corp',
+        icon: <Work />,
+        position: { x: currentX += (240 * scale + spacing), y: 140 },
+        size: { width: 200 * scale, height: 260 * scale },
+        color: '#00ff00'
+      },
+      {
+        id: 'github',
+        name: 'GitHub Station',
+        icon: <GitHub />,
+        position: { x: currentX += (200 * scale + spacing), y: 140 },
+        size: { width: 240 * scale, height: 300 * scale },
+        color: '#ffff00'
+      },
+      {
+        id: 'skills',
+        name: 'Skill Matrix',
+        icon: <Code />,
+        position: { x: currentX += (240 * scale + spacing), y: 140 },
+        size: { width: 220 * scale, height: 250 * scale },
+        color: '#ff6600'
+      }
+    ]
+  }
+  
+  const [buildings, setBuildings] = useState(getResponsiveBuildings())
+  
+  // Update building positions on window resize (with throttling for performance)
+  useEffect(() => {
+    let resizeTimer: NodeJS.Timeout
+    
+    const handleResize = () => {
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(() => {
+        setBuildings(getResponsiveBuildings())
+      }, 100) // Throttle resize events
     }
-  ]
+    
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      clearTimeout(resizeTimer)
+    }
+  }, [])
+
 
   const handleBuildingClick = (buildingId: string) => {
-    // Close terminal, social panels, and any side content when clicking buildings
-    setTerminalOpen(false)
-    setSocialOpen(false)
-    
     // Toggle building - if same building is clicked, close it
     if (activeSection === buildingId) {
-      setActiveSection(null)
-      setCameraPosition({ x: 0, y: 0, scale: 1 })
+      closeAllComponents()
       return
     }
     
+    // Close all other components first
+    closeAllComponents()
+    // Then open the selected building
     setActiveSection(buildingId)
     
     // Zoom into building
@@ -2597,35 +2770,105 @@ export const CyberpunkCity: React.FC = () => {
       case 'github':
         return (
           <Box>
-            <Typography sx={{ color: 'white', mb: 3 }}>
-              Recent contributions and activity across repositories. Each glowing streak in the city represents a commit!
+            <Typography variant="h5" sx={{ color: '#ffff00', mb: 3, fontWeight: 700 }}>
+              GitHub Command Center
             </Typography>
+            
+            {/* Stats Dashboard */}
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 2, mb: 3 }}>
+              {[
+                { label: 'Public Repos', value: githubLoading ? '...' : githubStats.publicRepos.toString(), icon: <Inventory sx={{ fontSize: '1.5rem' }} />, color: '#00ffff' },
+                { label: 'Total Commits', value: githubLoading ? '...' : `${githubStats.totalCommits}+`, icon: <Bolt sx={{ fontSize: '1.5rem' }} />, color: '#00ff00' },
+                { label: 'Languages', value: githubLoading ? '...' : githubStats.languages.toString(), icon: <Build sx={{ fontSize: '1.5rem' }} />, color: '#ff00ff' },
+                { label: 'Streak Days', value: githubLoading ? '...' : githubStats.streakDays.toString(), icon: <LocalFireDepartment sx={{ fontSize: '1.5rem' }} />, color: '#ff6600' }
+              ].map((stat) => (
+                <motion.div key={stat.label} whileHover={{ scale: 1.05 }}>
+                  <Box sx={{
+                    p: 2,
+                    border: `1px solid ${stat.color}`,
+                    borderRadius: 2,
+                    background: `rgba(${stat.color === '#00ffff' ? '0,255,255' : stat.color === '#00ff00' ? '0,255,0' : stat.color === '#ff00ff' ? '255,0,255' : '255,102,0'},0.1)`,
+                    textAlign: 'center',
+                    fontFamily: 'IBM Plex Mono, monospace'
+                  }}>
+                    <Box sx={{ mb: 0.5, color: stat.color }}>{stat.icon}</Box>
+                    <Typography sx={{ color: stat.color, fontWeight: 700, fontSize: '1.2rem' }}>
+                      {stat.value}
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.8rem' }}>
+                      {stat.label}
+                    </Typography>
+                  </Box>
+                </motion.div>
+              ))}
+            </Box>
+
+            {/* Compact Activity Grid */}
             <Box sx={{ 
               display: 'grid', 
-              gridTemplateColumns: 'repeat(7, 1fr)', 
-              gap: 1,
+              gridTemplateColumns: 'repeat(12, 1fr)', 
+              gap: 0.5,
               mb: 3,
               p: 2,
               border: '1px solid #ffff00',
               borderRadius: 2,
               background: 'rgba(255,255,0,0.05)'
             }}>
-              {Array.from({ length: 365 }, (_, i) => (
+              {Array.from({ length: 84 }, (_, i) => (
                 <Box
                   key={i}
                   sx={{
-                    width: '12px',
-                    height: '12px',
-                    background: Math.random() > 0.7 ? '#ffff00' : 'rgba(255,255,0,0.2)',
-                    borderRadius: '2px',
-                    boxShadow: Math.random() > 0.7 ? '0 0 4px #ffff00' : 'none'
+                    width: '8px',
+                    height: '8px',
+                    background: Math.random() > 0.6 ? '#ffff00' : Math.random() > 0.8 ? '#00ff00' : 'rgba(255,255,0,0.2)',
+                    borderRadius: '1px',
+                    boxShadow: Math.random() > 0.6 ? '0 0 3px #ffff00' : 'none'
                   }}
                 />
               ))}
             </Box>
-            <Typography sx={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem' }}>
-              🚀 Active contributor to open source projects and innovative web solutions
-            </Typography>
+
+            {/* Language Breakdown */}
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
+              {(githubLoading ? [
+                { name: 'Loading...', percentage: 0, color: '#666666' },
+                { name: 'Loading...', percentage: 0, color: '#666666' },
+                { name: 'Loading...', percentage: 0, color: '#666666' }
+              ] : githubStats.languageStats).map((lang) => (
+                <Box key={lang.name} sx={{
+                  p: 2,
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  borderRadius: 2,
+                  background: 'rgba(255,255,255,0.05)'
+                }}>
+                  <Typography sx={{ color: lang.color, fontWeight: 600, mb: 1, fontSize: '0.9rem' }}>
+                    {lang.name}
+                  </Typography>
+                  <Box sx={{ 
+                    width: '100%', 
+                    height: '4px', 
+                    background: 'rgba(255,255,255,0.1)',
+                    borderRadius: '2px',
+                    overflow: 'hidden'
+                  }}>
+                    <motion.div
+                      style={{
+                        width: `${lang.percentage}%`,
+                        height: '100%',
+                        background: lang.color,
+                        borderRadius: '2px'
+                      }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${lang.percentage}%` }}
+                      transition={{ duration: 1, delay: 0.5 }}
+                    />
+                  </Box>
+                  <Typography sx={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.8rem', mt: 0.5 }}>
+                    {lang.percentage}%
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
           </Box>
         )
       case 'skills':
@@ -2704,80 +2947,6 @@ export const CyberpunkCity: React.FC = () => {
                   </Box>
                 </motion.div>
               ))}
-            </Box>
-          </Box>
-        )
-      case 'contact':
-        return (
-          <Box>
-            <Typography variant="h5" sx={{ color: '#9900ff', mb: 3, fontWeight: 700 }}>
-              Contact Terminal
-            </Typography>
-            <Box sx={{ display: 'grid', gap: 3, gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
-              <motion.div whileHover={{ scale: 1.02 }}>
-                <Box
-                  sx={{
-                    p: 3,
-                    border: '1px solid #9900ff',
-                    borderRadius: 2,
-                    background: 'rgba(153,0,255,0.05)',
-                    backdropFilter: 'blur(10px)',
-                    fontFamily: 'monospace'
-                  }}
-                >
-                  <Typography sx={{ color: '#9900ff', mb: 2, fontSize: '1.1rem' }}>
-                    &gt; CONTACT_INFO.exe
-                  </Typography>
-                  <Box sx={{ color: 'white', lineHeight: 1.8 }}>
-                    <Typography sx={{ color: '#00ffff' }}>
-                      📧 Email: cameron@louddoor.com
-                    </Typography>
-                    <Typography sx={{ color: '#00ff00' }}>
-                      💼 LinkedIn: /in/cameronpotter
-                    </Typography>
-                    <Typography sx={{ color: '#ffff00' }}>
-                      🐙 GitHub: /cameronopotter
-                    </Typography>
-                    <Typography sx={{ color: '#ff00ff' }}>
-                      🏢 Company: Louddoor
-                    </Typography>
-                    <Typography sx={{ color: '#00ffff' }}>
-                      🎓 University: Western Governors University
-                    </Typography>
-                  </Box>
-                </Box>
-              </motion.div>
-              
-              <motion.div whileHover={{ scale: 1.02 }}>
-                <Box
-                  sx={{
-                    p: 3,
-                    border: '1px solid #9900ff',
-                    borderRadius: 2,
-                    background: 'rgba(153,0,255,0.05)',
-                    backdropFilter: 'blur(10px)',
-                    fontFamily: 'monospace'
-                  }}
-                >
-                  <Typography sx={{ color: '#9900ff', mb: 2, fontSize: '1.1rem' }}>
-                    &gt; STATUS.log
-                  </Typography>
-                  <Box sx={{ color: 'white', lineHeight: 1.8 }}>
-                    <Typography sx={{ color: '#00ff00' }}>
-                      ✅ Available for freelance projects
-                    </Typography>
-                    <Typography sx={{ color: '#00ff00' }}>
-                      ✅ Open to collaboration
-                    </Typography>
-                    <Typography sx={{ color: '#00ff00' }}>
-                      ✅ Currently learning: Advanced React patterns
-                    </Typography>
-                    <Typography sx={{ color: '#ffff00' }}>
-                      ⚡ Response time: Usually within 24h
-                    </Typography>
-                  </Box>
-                </Box>
-              </motion.div>
             </Box>
           </Box>
         )
@@ -3083,9 +3252,298 @@ export const CyberpunkCity: React.FC = () => {
 
   const activeBuilding = buildings.find(b => b.id === activeSection)
 
-  return (
+  // Mobile Layout Component
+  const MobileLayout = () => (
     <Box
       sx={{
+        display: { xs: 'block', md: 'none' }, // Show only on mobile
+        width: '100vw',
+        height: '100vh',
+        background: 'linear-gradient(180deg, #000011 0%, #001122 50%, #002244 100%)',
+        overflow: 'auto',
+        position: 'relative'
+      }}
+    >
+      {/* Mobile Header */}
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '70px',
+          background: 'linear-gradient(135deg, rgba(0,10,30,0.98) 0%, rgba(0,20,40,0.98) 100%)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(0,255,255,0.3)',
+          zIndex: 1000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          px: 2
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <Box
+            sx={{
+              width: 40,
+              height: 40,
+              background: 'linear-gradient(135deg, #00ffff, #0099cc)',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 0 20px rgba(0,255,255,0.3)'
+            }}
+          >
+            <Code sx={{ color: 'white', fontSize: '1.2rem' }} />
+          </Box>
+          <Box>
+            <Typography sx={{
+              color: 'white',
+              fontSize: '1.1rem',
+              fontWeight: 700,
+              letterSpacing: '1px',
+              fontFamily: 'IBM Plex Sans, sans-serif'
+            }}>
+              CAMERON POTTER
+            </Typography>
+            <Typography sx={{
+              color: '#00ffff',
+              fontSize: '0.7rem',
+              opacity: 0.8,
+              fontFamily: 'IBM Plex Sans, sans-serif'
+            }}>
+              Software Engineer
+            </Typography>
+          </Box>
+        </Box>
+        
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <IconButton
+            onClick={() => {
+              closeAllComponents()
+              setTerminalOpen(true)
+            }}
+            sx={{
+              color: '#00ff00',
+              border: '1px solid rgba(0,255,0,0.3)',
+              borderRadius: '8px',
+              width: 36,
+              height: 36,
+              '&:hover': {
+                background: 'rgba(0,255,0,0.1)',
+                borderColor: '#00ff00'
+              }
+            }}
+          >
+            <Terminal sx={{ fontSize: '1rem' }} />
+          </IconButton>
+          
+          <IconButton
+            onClick={() => {
+              closeAllComponents()
+              setSocialOpen(true)
+            }}
+            sx={{
+              color: '#ff00ff',
+              border: '1px solid rgba(255,0,255,0.3)',
+              borderRadius: '8px',
+              width: 36,
+              height: 36,
+              '&:hover': {
+                background: 'rgba(255,0,255,0.1)',
+                borderColor: '#ff00ff'
+              }
+            }}
+          >
+            <Person sx={{ fontSize: '1rem' }} />
+          </IconButton>
+          
+          <IconButton
+            onClick={toggleMusic}
+            sx={{
+              color: musicPlaying ? '#ffff00' : 'rgba(255,255,255,0.6)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              borderRadius: '8px',
+              width: 36,
+              height: 36,
+              '&:hover': {
+                background: 'rgba(255,255,255,0.1)'
+              }
+            }}
+          >
+            {musicPlaying ? <VolumeUp sx={{ fontSize: '1rem' }} /> : <VolumeOff sx={{ fontSize: '1rem' }} />}
+          </IconButton>
+        </Box>
+      </Box>
+
+      {/* Mobile Content Cards */}
+      <Box sx={{ px: 2, py: 3, display: 'flex', flexDirection: 'column', gap: 3 }}>
+        {buildings.map((building) => (
+          <motion.div
+            key={building.id}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Box
+              onClick={() => handleBuildingClick(building.id)}
+              sx={{
+                p: 3,
+                borderRadius: '16px',
+                background: `linear-gradient(135deg, ${building.color}15, ${building.color}08)`,
+                border: `2px solid ${building.color}40`,
+                backdropFilter: 'blur(10px)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                boxShadow: activeSection === building.id 
+                  ? `0 8px 32px ${building.color}40, inset 0 0 20px ${building.color}20`
+                  : `0 4px 16px rgba(0,0,0,0.3)`,
+                '&:hover': {
+                  border: `2px solid ${building.color}80`,
+                  boxShadow: `0 8px 24px ${building.color}30`
+                }
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <Box sx={{ color: building.color, fontSize: '1.5rem' }}>
+                  {building.icon}
+                </Box>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: building.color,
+                    fontWeight: 600,
+                    fontFamily: 'IBM Plex Sans, sans-serif',
+                    fontSize: '1.1rem'
+                  }}
+                >
+                  {building.name}
+                </Typography>
+              </Box>
+              
+              <Typography
+                sx={{
+                  color: 'rgba(255,255,255,0.8)',
+                  fontSize: '0.9rem',
+                  lineHeight: 1.5,
+                  fontFamily: 'IBM Plex Sans, sans-serif'
+                }}
+              >
+                {building.id === 'about' && 'Software engineer with full-stack expertise'}
+                {building.id === 'projects' && 'Interactive web applications and digital experiences'}
+                {building.id === 'experience' && 'Professional development journey and roles'}
+                {building.id === 'github' && 'Live coding activity and repository statistics'}
+                {building.id === 'skills' && 'Technical proficiencies and programming languages'}
+              </Typography>
+              
+              {activeSection === building.id && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Box sx={{ mt: 3, pt: 3, borderTop: `1px solid ${building.color}30` }}>
+                    {renderContent(building.id)}
+                  </Box>
+                </motion.div>
+              )}
+            </Box>
+          </motion.div>
+        ))}
+      </Box>
+
+      {/* Mobile Floating Action Buttons */}
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: 20,
+          left: 20,
+          right: 20,
+          display: 'flex',
+          justifyContent: 'space-between',
+          gap: 2,
+          zIndex: 100
+        }}
+      >
+        <Fab
+          onClick={() => {
+            if (timelineOpen) {
+              setTimelineOpen(false)
+            } else {
+              closeAllComponents()
+              setTimelineOpen(true)
+            }
+          }}
+          size="medium"
+          sx={{
+            background: timelineOpen 
+              ? 'linear-gradient(135deg, #00ffff, #0099cc)' 
+              : 'rgba(0,255,255,0.2)',
+            border: '1px solid #00ffff',
+            color: timelineOpen ? 'white' : '#00ffff',
+            boxShadow: timelineOpen 
+              ? '0 0 20px rgba(0,255,255,0.5)' 
+              : '0 4px 12px rgba(0,0,0,0.3)',
+            '&:hover': {
+              background: 'linear-gradient(135deg, #00ffff, #0099cc)',
+              color: 'white'
+            }
+          }}
+        >
+          <Work />
+        </Fab>
+        
+        <Fab
+          onClick={() => {
+            if (aiOpen) {
+              setAiOpen(false)
+            } else {
+              closeAllComponents()
+              setAiOpen(true)
+            }
+          }}
+          size="medium"
+          sx={{
+            background: aiOpen 
+              ? 'linear-gradient(135deg, #00ff00, #009900)' 
+              : 'rgba(0,255,0,0.2)',
+            border: '1px solid #00ff00',
+            color: aiOpen ? 'white' : '#00ff00',
+            boxShadow: aiOpen 
+              ? '0 0 20px rgba(0,255,0,0.5)' 
+              : '0 4px 12px rgba(0,0,0,0.3)',
+            '&:hover': {
+              background: 'linear-gradient(135deg, #00ff00, #009900)',
+              color: 'white'
+            }
+          }}
+        >
+          <Code />
+        </Fab>
+      </Box>
+
+      {/* Mobile Components */}
+      <CommandTerminal isOpen={terminalOpen} setIsOpen={setTerminalOpen} />
+      <SocialMediaHub isOpen={socialOpen} setIsOpen={setSocialOpen} />
+      <HolographicTimeline 
+        isOpen={timelineOpen} 
+        setIsOpen={setTimelineOpen} 
+        closeAllComponents={closeAllComponents} 
+      />
+      <AINeural 
+        isOpen={aiOpen} 
+        setIsOpen={setAiOpen} 
+        closeAllComponents={closeAllComponents} 
+      />
+    </Box>
+  )
+
+  // Desktop Layout (existing)
+  const DesktopLayout = () => (
+    <Box
+      sx={{
+        display: { xs: 'none', md: 'block' }, // Hide on mobile, show on desktop
         width: '100vw',
         height: '100vh',
         background: 'linear-gradient(180deg, #000011 0%, #001122 30%, #002244 100%)',
@@ -3155,38 +3613,30 @@ export const CyberpunkCity: React.FC = () => {
       {/* Professional Header */}
       <ProfessionalHeader 
         onTerminalOpen={useCallback(() => {
+          closeAllComponents()
           setTerminalOpen(true)
-          setSocialOpen(false)  // Close social when opening terminal
-        }, [])}
+        }, [closeAllComponents])}
         onSocialOpen={useCallback(() => {
+          closeAllComponents()
           setSocialOpen(true)
-          setTerminalOpen(false)  // Close terminal when opening social
-        }, [])}
+        }, [closeAllComponents])}
         onMusicToggle={toggleMusic}
         isMusicPlaying={musicPlaying}
       />
       
-      {/* Hidden Audio Element - Better Lofi Track */}
-      <audio
-        ref={audioRef}
-        loop
-        preload="metadata"
-        style={{ display: 'none' }}
-        volume={0.3}
-      >
-        {/* Free lofi/chill music - replace with your preferred track */}
-        <source src="https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mp3" />
-        {/* Alternative free sources:
-            - https://www.bensound.com/bensound-music/bensound-slowmotion.mp3
-            - https://www.bensound.com/bensound-music/bensound-creativeminds.mp3
-            - https://www.bensound.com/bensound-music/bensound-dreams.mp3 */}
-      </audio>
-      
       {/* Interactive Elements */}
       <CommandTerminal isOpen={terminalOpen} setIsOpen={setTerminalOpen} />
       <SocialMediaHub isOpen={socialOpen} setIsOpen={setSocialOpen} />
-      <HolographicTimeline />
-      <AINeural />
+      <HolographicTimeline 
+        isOpen={timelineOpen} 
+        setIsOpen={setTimelineOpen} 
+        closeAllComponents={closeAllComponents} 
+      />
+      <AINeural 
+        isOpen={aiOpen} 
+        setIsOpen={setAiOpen} 
+        closeAllComponents={closeAllComponents} 
+      />
 
       {/* Clean Professional Header */}
       <Box
@@ -3306,5 +3756,29 @@ export const CyberpunkCity: React.FC = () => {
         )}
       </AnimatePresence>
     </Box>
+  )
+
+  // Return both layouts
+  return (
+    <>
+      <MobileLayout />
+      <DesktopLayout />
+      
+      {/* Hidden Audio Element - Better Lofi Track */}
+      <audio
+        ref={audioRef}
+        loop
+        preload="metadata"
+        style={{ display: 'none' }}
+        volume={0.3}
+      >
+        {/* Free lofi/chill music - replace with your preferred track */}
+        <source src="https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3" type="audio/mp3" />
+        {/* Alternative free sources:
+            - https://www.bensound.com/bensound-music/bensound-slowmotion.mp3
+            - https://www.bensound.com/bensound-music/bensound-creativeminds.mp3
+            - https://www.bensound.com/bensound-music/bensound-dreams.mp3 */}
+      </audio>
+    </>
   )
 }
