@@ -522,7 +522,11 @@ const LofiPlayer: React.FC = () => {
 }
 
 // Social Media Hub - Interactive floating panel
-const SocialMediaHub: React.FC<{ isOpen: boolean; setIsOpen: (open: boolean) => void }> = ({ isOpen, setIsOpen }) => {
+const SocialMediaHub: React.FC<{
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+  closeAllComponents?: () => void;
+}> = ({ isOpen, setIsOpen, closeAllComponents }) => {
   
   const socialLinks = [
     {
@@ -559,7 +563,14 @@ const SocialMediaHub: React.FC<{ isOpen: boolean; setIsOpen: (open: boolean) => 
     <>
       {/* Social Hub Toggle Button */}
       <Fab
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (isOpen) {
+            setIsOpen(false)
+          } else {
+            closeAllComponents?.()
+            setIsOpen(true)
+          }
+        }}
         sx={{
           position: 'fixed',
           top: 140,
@@ -718,12 +729,20 @@ const HolographicTimeline: React.FC<{
   
   const timelineData = [
     {
+      year: 2025,
+      title: 'Senior Developer',
+      company: 'PlantSitter Labs',
+      color: '#00ffff',
+      achievements: ['AWS Infrastructure', 'Laravel & MongoDB', 'AI Applications Testing'],
+      status: 'CURRENT'
+    },
+    {
       year: 2023,
       title: 'Software Engineer',
       company: 'Louddoor',
-      color: '#00ffff',
-      achievements: ['Full-stack development', 'Code reviews', 'Agile methodologies'],
-      status: 'CURRENT'
+      color: '#00ff00',
+      achievements: ['Full-stack development', 'Laravel frameworks', 'Code reviews'],
+      status: 'ACTIVE'
     },
     {
       year: 2023,
@@ -734,20 +753,28 @@ const HolographicTimeline: React.FC<{
       status: 'PROMOTED'
     },
     {
-      year: 2021,
+      year: 2020,
       title: 'Freelance Developer',
       company: 'Self-employed',
       color: '#ff6600',
-      achievements: ['Mobile solutions', 'Client analysis', 'Multiple languages'],
+      achievements: ['Mobile solutions', 'Client satisfaction', 'Multiple languages'],
       status: 'ENTREPRENEUR'
     },
     {
-      year: 2020,
+      year: 2019,
       title: 'Software Engineering Intern',
       company: 'Benty',
       color: '#9900ff',
       achievements: ['Java & Python', 'Agile environment', 'Code optimization'],
       status: 'FOUNDATION'
+    },
+    {
+      year: 2018,
+      title: 'Retail Sales Associate',
+      company: 'Griffin Pools & Spas',
+      color: '#666',
+      achievements: ['Customer relationships', 'Product education', 'Sales support'],
+      status: 'EXPERIENCE'
     }
   ]
   
@@ -772,6 +799,7 @@ const HolographicTimeline: React.FC<{
           color: '#00ffff',
           width: 55,
           height: 55,
+          display: { xs: 'none', md: 'flex' }, // Hide on mobile, show on desktop
           '&:hover': {
             background: 'rgba(0,255,255,0.3)',
             boxShadow: '0 0 30px #00ffff'
@@ -1331,7 +1359,8 @@ const AINeural: React.FC<{
         sx={{
           position: 'fixed',
           bottom: 20,
-          left: 20,
+          left: { xs: '50%', md: 20 }, // Center on mobile, left on desktop
+          transform: { xs: 'translateX(-50%)', md: 'none' }, // Center positioning on mobile
           background: 'rgba(0,255,0,0.2)',
           border: '1px solid #00ff00',
           color: '#00ff00',
@@ -1363,7 +1392,9 @@ const AINeural: React.FC<{
               position: 'fixed',
               bottom: '10%',
               left: '5%',
-              width: '450px',
+              right: '5%', // Add right constraint for mobile
+              width: 'auto', // Remove fixed width
+              maxWidth: '450px', // Keep desktop max width
               height: '600px',
               zIndex: 1001,
               perspective: '1000px'
@@ -2975,9 +3006,63 @@ export const CyberpunkCity: React.FC = () => {
         return (
           <Box>
             <Typography variant="h4" sx={{ color: '#00ff00', mb: 4, fontWeight: 700 }}>
-              Professional Experience
+              Career Timeline
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              {/* PlantSitter Labs - Current */}
+              <motion.div whileHover={{ x: 10 }}>
+                <Box sx={{
+                  p: 4,
+                  border: '1px solid #00ffff',
+                  borderRadius: 2,
+                  background: 'rgba(0,255,255,0.05)',
+                  backdropFilter: 'blur(10px)'
+                }}>
+                  <Typography variant="h6" sx={{ color: '#00ffff', mb: 1 }}>
+                    Senior Developer
+                  </Typography>
+                  <Typography sx={{ color: '#ff00ff', mb: 2, fontWeight: 600 }}>
+                    PlantSitter Labs • Columbia, SC • 05/2025 - Current
+                  </Typography>
+                  <Box sx={{ mb: 3 }}>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Developed responsive web applications using HTML, CSS, and JavaScript frameworks.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Implemented database solutions using MySQL and MongoDB for data management.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Built RESTful web services using the Laravel Framework and JSON data formats.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Configured and maintained cloud-based data infrastructure on platforms like AWS, Azure, and Google Cloud to enhance data storage and computation capabilities.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, fontSize: '0.95rem' }}>
+                      • Supported the testing and validation of AI applications in real-world scenarios.
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                    {['HTML', 'CSS', 'JavaScript', 'MySQL', 'MongoDB', 'Laravel', 'AWS', 'Azure', 'Google Cloud'].map((tech) => (
+                      <Box
+                        key={tech}
+                        sx={{
+                          px: 2,
+                          py: 0.5,
+                          border: '1px solid #00ffff',
+                          borderRadius: 1,
+                          color: '#00ffff',
+                          fontSize: '0.8rem',
+                          background: 'rgba(0,255,255,0.1)'
+                        }}
+                      >
+                        {tech}
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              </motion.div>
+
+              {/* Louddoor Software Engineer */}
               <motion.div whileHover={{ x: 10 }}>
                 <Box sx={{
                   p: 4,
@@ -2990,53 +3075,30 @@ export const CyberpunkCity: React.FC = () => {
                     Software Engineer
                   </Typography>
                   <Typography sx={{ color: '#ffff00', mb: 2, fontWeight: 600 }}>
-                    Louddoor • Full-time • 06/2023 - Current
+                    Louddoor • Columbia, SC • 06/2023 - Current
                   </Typography>
-                  <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, mb: 3 }}>
-                    Full-stack development, code reviews, Agile methodologies. Building scalable web applications 
-                    and leading development of customer-facing features with modern tech stack.
-                  </Typography>
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {['PHP', 'Laravel', 'Vue.js', 'MySQL', 'AWS', 'Docker'].map((tech) => (
-                      <Box
-                        key={tech}
-                        sx={{
-                          px: 2,
-                          py: 0.5,
-                          border: '1px solid #00ff00',
-                          borderRadius: 1,
-                          color: '#00ff00',
-                          fontSize: '0.8rem',
-                          background: 'rgba(0,255,0,0.1)'
-                        }}
-                      >
-                        {tech}
-                      </Box>
-                    ))}
+                  <Box sx={{ mb: 3 }}>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Developed and tested software applications with modern programming languages.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Collaborated with team members to gather project requirements efficiently.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Assisted in troubleshooting and debugging of existing software systems.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Documented design and development processes for future reference.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Participated in code reviews to uphold quality standards.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, fontSize: '0.95rem' }}>
+                      • Utilized PHP frameworks, including Laravel, to enhance application scalability.
+                    </Typography>
                   </Box>
-                </Box>
-              </motion.div>
-              
-              <motion.div whileHover={{ x: 10 }}>
-                <Box sx={{
-                  p: 4,
-                  border: '1px solid #00ff00',
-                  borderRadius: 2,
-                  background: 'rgba(0,255,0,0.05)',
-                  backdropFilter: 'blur(10px)'
-                }}>
-                  <Typography variant="h6" sx={{ color: '#00ff00', mb: 1 }}>
-                    Software Engineering Intern
-                  </Typography>
-                  <Typography sx={{ color: '#ffff00', mb: 2, fontWeight: 600 }}>
-                    Louddoor • Internship • 02/2023 - 06/2023
-                  </Typography>
-                  <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, mb: 3 }}>
-                    Technical documentation, daily standups, tool implementation. Gained hands-on experience 
-                    in agile development practices and modern web technologies.
-                  </Typography>
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {['PHP', 'Laravel', 'Vue.js', 'Git', 'Agile'].map((tech) => (
+                    {['PHP', 'Laravel', 'Modern Languages', 'Code Reviews', 'Agile', 'Documentation'].map((tech) => (
                       <Box
                         key={tech}
                         sx={{
@@ -3056,36 +3118,97 @@ export const CyberpunkCity: React.FC = () => {
                 </Box>
               </motion.div>
 
+              {/* Louddoor Intern */}
               <motion.div whileHover={{ x: 10 }}>
                 <Box sx={{
                   p: 4,
-                  border: '1px solid #00ff00',
+                  border: '1px solid #0088ff',
                   borderRadius: 2,
-                  background: 'rgba(0,255,0,0.05)',
+                  background: 'rgba(0,136,255,0.05)',
                   backdropFilter: 'blur(10px)'
                 }}>
-                  <Typography variant="h6" sx={{ color: '#00ff00', mb: 1 }}>
+                  <Typography variant="h6" sx={{ color: '#0088ff', mb: 1 }}>
+                    Software Engineering Intern
+                  </Typography>
+                  <Typography sx={{ color: '#ffff00', mb: 2, fontWeight: 600 }}>
+                    Louddoor • Columbia, SC • 02/2023 - 06/2023
+                  </Typography>
+                  <Box sx={{ mb: 3 }}>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Assisted in writing clear documentation for code and processes.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Participated in code reviews to ensure quality and adherence to standards.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Engaged in daily stand-ups to discuss project progress and roadblocks.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Supported senior engineers in implementing new tools and technologies.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, fontSize: '0.95rem' }}>
+                      • Created technical documentation such as user manuals, flowcharts, and diagrams.
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                    {['Documentation', 'Code Reviews', 'Daily Standups', 'Tools Implementation', 'Technical Writing'].map((tech) => (
+                      <Box
+                        key={tech}
+                        sx={{
+                          px: 2,
+                          py: 0.5,
+                          border: '1px solid #0088ff',
+                          borderRadius: 1,
+                          color: '#0088ff',
+                          fontSize: '0.8rem',
+                          background: 'rgba(0,136,255,0.1)'
+                        }}
+                      >
+                        {tech}
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              </motion.div>
+
+              {/* Freelance Developer */}
+              <motion.div whileHover={{ x: 10 }}>
+                <Box sx={{
+                  p: 4,
+                  border: '1px solid #ff6600',
+                  borderRadius: 2,
+                  background: 'rgba(255,102,0,0.05)',
+                  backdropFilter: 'blur(10px)'
+                }}>
+                  <Typography variant="h6" sx={{ color: '#ff6600', mb: 1 }}>
                     Freelance Software Developer
                   </Typography>
                   <Typography sx={{ color: '#ffff00', mb: 2, fontWeight: 600 }}>
-                    Self-Employed • Freelance • 12/2020 - 02/2023
+                    Self-employed • Irmo, SC • 12/2020 - 02/2023
                   </Typography>
-                  <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, mb: 3 }}>
-                    Mobile solutions, client analysis, multiple programming languages. Developed custom 
-                    software solutions for various clients across different industries.
-                  </Typography>
+                  <Box sx={{ mb: 3 }}>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Developed mobile software solutions for local companies by analyzing client needs and utilizing various programming languages.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Tested and maintained software to ensure optimal performance and reliability.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, fontSize: '0.95rem' }}>
+                      • Communicated technical information effectively to clients, ensuring satisfaction with delivered products.
+                    </Typography>
+                  </Box>
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {['React', 'Node.js', 'Python', 'Mobile Dev', 'Client Relations'].map((tech) => (
+                    {['Mobile Development', 'Client Analysis', 'Multiple Languages', 'Testing', 'Client Relations'].map((tech) => (
                       <Box
                         key={tech}
                         sx={{
                           px: 2,
                           py: 0.5,
-                          border: '1px solid #00ff00',
+                          border: '1px solid #ff6600',
                           borderRadius: 1,
-                          color: '#00ff00',
+                          color: '#ff6600',
                           fontSize: '0.8rem',
-                          background: 'rgba(0,255,0,0.1)'
+                          background: 'rgba(255,102,0,0.1)'
                         }}
                       >
                         {tech}
@@ -3095,36 +3218,53 @@ export const CyberpunkCity: React.FC = () => {
                 </Box>
               </motion.div>
 
+              {/* Benty Intern */}
               <motion.div whileHover={{ x: 10 }}>
                 <Box sx={{
                   p: 4,
-                  border: '1px solid #00ff00',
+                  border: '1px solid #9900ff',
                   borderRadius: 2,
-                  background: 'rgba(0,255,0,0.05)',
+                  background: 'rgba(153,0,255,0.05)',
                   backdropFilter: 'blur(10px)'
                 }}>
-                  <Typography variant="h6" sx={{ color: '#00ff00', mb: 1 }}>
+                  <Typography variant="h6" sx={{ color: '#9900ff', mb: 1 }}>
                     Software Engineering Intern
                   </Typography>
                   <Typography sx={{ color: '#ffff00', mb: 2, fontWeight: 600 }}>
-                    Benty • Internship • 09/2019 - 01/2023
+                    Benty • Irmo, SC • 09/2019 - 01/2023
                   </Typography>
-                  <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, mb: 3 }}>
-                    Java & Python development, Agile environment, code optimization. Contributed to backend 
-                    systems and learned industry best practices in software development.
-                  </Typography>
+                  <Box sx={{ mb: 3 }}>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Developed software features using Java and Python for web applications.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Analyzed customer requirements to design solutions that meet their needs while adhering to industry standards.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Collaborated with other developers on coding projects in an Agile environment.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Optimized existing code by refactoring it for improved readability and performance.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Shadowed team engineers to learn new skills.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, fontSize: '0.95rem' }}>
+                      • Built visually rich front-end components.
+                    </Typography>
+                  </Box>
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {['Java', 'Python', 'Agile', 'Backend', 'Code Review'].map((tech) => (
+                    {['Java', 'Python', 'Web Applications', 'Agile', 'Code Optimization', 'Front-end'].map((tech) => (
                       <Box
                         key={tech}
                         sx={{
                           px: 2,
                           py: 0.5,
-                          border: '1px solid #00ff00',
+                          border: '1px solid #9900ff',
                           borderRadius: 1,
-                          color: '#00ff00',
+                          color: '#9900ff',
                           fontSize: '0.8rem',
-                          background: 'rgba(0,255,0,0.1)'
+                          background: 'rgba(153,0,255,0.1)'
                         }}
                       >
                         {tech}
@@ -3134,36 +3274,44 @@ export const CyberpunkCity: React.FC = () => {
                 </Box>
               </motion.div>
 
+              {/* Griffin Pools */}
               <motion.div whileHover={{ x: 10 }}>
                 <Box sx={{
                   p: 4,
-                  border: '1px solid #00ff00',
+                  border: '1px solid #666',
                   borderRadius: 2,
-                  background: 'rgba(0,255,0,0.05)',
+                  background: 'rgba(102,102,102,0.05)',
                   backdropFilter: 'blur(10px)'
                 }}>
-                  <Typography variant="h6" sx={{ color: '#00ff00', mb: 1 }}>
+                  <Typography variant="h6" sx={{ color: '#999', mb: 1 }}>
                     Retail Sales Associate
                   </Typography>
-                  <Typography sx={{ color: '#ffff00', mb: 2, fontWeight: 600 }}>
-                    Griffin Pools & Spas • Part-time • 03/2018 - 02/2023
+                  <Typography sx={{ color: '#ccc', mb: 2, fontWeight: 600 }}>
+                    Griffin Pools & Spas • Lexington, SC • 03/2018 - 02/2023
                   </Typography>
-                  <Typography sx={{ color: 'rgba(255,255,255,0.9)', lineHeight: 1.7, mb: 3 }}>
-                    Customer service, product education, relationship building. Developed strong 
-                    communication and problem-solving skills while maintaining high customer satisfaction.
-                  </Typography>
+                  <Box sx={{ mb: 3 }}>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Assisted customers in selecting appropriate pool and spa products, ensuring satisfaction.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, mb: 1, fontSize: '0.95rem' }}>
+                      • Educated clients on diverse product features to enhance informed purchasing decisions.
+                    </Typography>
+                    <Typography sx={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, fontSize: '0.95rem' }}>
+                      • Cultivated strong customer relationships through exceptional service and support.
+                    </Typography>
+                  </Box>
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {['Customer Service', 'Sales', 'Product Knowledge', 'Communication', 'Problem Solving'].map((skill) => (
+                    {['Customer Service', 'Product Education', 'Sales Support', 'Client Relations'].map((skill) => (
                       <Box
                         key={skill}
                         sx={{
                           px: 2,
                           py: 0.5,
-                          border: '1px solid #00ff00',
+                          border: '1px solid #666',
                           borderRadius: 1,
-                          color: '#00ff00',
+                          color: '#999',
                           fontSize: '0.8rem',
-                          background: 'rgba(0,255,0,0.1)'
+                          background: 'rgba(102,102,102,0.1)'
                         }}
                       >
                         {skill}
@@ -3546,7 +3694,11 @@ export const CyberpunkCity: React.FC = () => {
 
       {/* Mobile Components */}
       <CommandTerminal isOpen={terminalOpen} setIsOpen={setTerminalOpen} />
-      <SocialMediaHub isOpen={socialOpen} setIsOpen={setSocialOpen} />
+      <SocialMediaHub
+        isOpen={socialOpen}
+        setIsOpen={setSocialOpen}
+        closeAllComponents={closeAllComponents}
+      />
       <HolographicTimeline 
         isOpen={timelineOpen} 
         setIsOpen={setTimelineOpen} 
@@ -3647,11 +3799,15 @@ export const CyberpunkCity: React.FC = () => {
       
       {/* Interactive Elements */}
       <CommandTerminal isOpen={terminalOpen} setIsOpen={setTerminalOpen} />
-      <SocialMediaHub isOpen={socialOpen} setIsOpen={setSocialOpen} />
-      <HolographicTimeline 
-        isOpen={timelineOpen} 
-        setIsOpen={setTimelineOpen} 
-        closeAllComponents={closeAllComponents} 
+      <SocialMediaHub
+        isOpen={socialOpen}
+        setIsOpen={setSocialOpen}
+        closeAllComponents={closeAllComponents}
+      />
+      <HolographicTimeline
+        isOpen={timelineOpen}
+        setIsOpen={setTimelineOpen}
+        closeAllComponents={closeAllComponents}
       />
       <AINeural 
         isOpen={aiOpen} 

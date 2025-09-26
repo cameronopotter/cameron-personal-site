@@ -320,32 +320,63 @@ const GitHubSection: React.FC = () => (
   </Box>
 )
 
-// Experience Section
+// Experience Section - Career Timeline
 const ExperienceSection: React.FC = () => (
   <Box>
     <Typography variant="h4" sx={{ color: '#00ffff', mb: 4, fontWeight: 700 }}>
-      Professional Experience
+      Career Timeline
     </Typography>
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+      {/* PlantSitter Labs - Current */}
       <Box sx={{
         p: 3,
         border: '1px solid #00ffff',
         borderRadius: 2,
         background: 'rgba(0,255,255,0.05)',
-        backdropFilter: 'blur(10px)'
+        backdropFilter: 'blur(10px)',
+        position: 'relative'
       }}>
-        <Typography variant="h6" sx={{ color: '#00ffff', mb: 1 }}>
-          Software Engineer
-        </Typography>
-        <Typography sx={{ color: '#ff00ff', mb: 2 }}>
-          Louddoor • Full-time
-        </Typography>
-        <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.6 }}>
-          Building scalable web applications and leading development of customer-facing features. 
-          Working with modern tech stack including PHP, Laravel, Vue.js, and cloud infrastructure.
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+          <Box>
+            <Typography variant="h6" sx={{ color: '#00ffff', mb: 1 }}>
+              Senior Developer
+            </Typography>
+            <Typography sx={{ color: '#ff00ff', mb: 1 }}>
+              PlantSitter Labs • Columbia, SC
+            </Typography>
+          </Box>
+          <Typography sx={{ color: '#00ffff', fontSize: '0.9rem', fontWeight: 600 }}>
+            05/2025 - Current
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+          {['AWS', 'Tailwind CSS', 'Agile'].map((tech) => (
+            <Box
+              key={tech}
+              sx={{
+                px: 2,
+                py: 0.5,
+                border: '1px solid #00ffff',
+                borderRadius: 1,
+                color: '#00ffff',
+                fontSize: '0.8rem',
+                background: 'rgba(0,255,255,0.1)'
+              }}
+            >
+              {tech}
+            </Box>
+          ))}
+        </Box>
+        <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+          • Developed responsive web applications using HTML, CSS, and JavaScript frameworks.<br/>
+          • Implemented database solutions using MySQL and MongoDB for data management.<br/>
+          • Built RESTful web services using the Laravel Framework and JSON data formats.<br/>
+          • Configured and maintained cloud-based data infrastructure on platforms like AWS, Azure, and Google Cloud to enhance data storage and computation capabilities.<br/>
+          • Supported the testing and validation of AI applications in real-world scenarios.
         </Typography>
       </Box>
-      
+
+      {/* Louddoor Software Engineer */}
       <Box sx={{
         p: 3,
         border: '1px solid #00ffff',
@@ -353,15 +384,197 @@ const ExperienceSection: React.FC = () => (
         background: 'rgba(0,255,255,0.05)',
         backdropFilter: 'blur(10px)'
       }}>
-        <Typography variant="h6" sx={{ color: '#00ffff', mb: 1 }}>
-          Computer Science Student
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+          <Box>
+            <Typography variant="h6" sx={{ color: '#00ffff', mb: 1 }}>
+              Software Engineer
+            </Typography>
+            <Typography sx={{ color: '#ff00ff', mb: 1 }}>
+              Louddoor • Columbia, SC
+            </Typography>
+          </Box>
+          <Typography sx={{ color: '#00ffff', fontSize: '0.9rem', fontWeight: 600 }}>
+            06/2023 - Current
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+          {['PHP', 'Laravel', 'Agile', 'Team Collaboration'].map((tech) => (
+            <Box
+              key={tech}
+              sx={{
+                px: 2,
+                py: 0.5,
+                border: '1px solid #00ffff',
+                borderRadius: 1,
+                color: '#00ffff',
+                fontSize: '0.8rem',
+                background: 'rgba(0,255,255,0.1)'
+              }}
+            >
+              {tech}
+            </Box>
+          ))}
+        </Box>
+        <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+          • Developed and tested software applications with modern programming languages.<br/>
+          • Collaborated with team members to gather project requirements efficiently.<br/>
+          • Assisted in troubleshooting and debugging of existing software systems.<br/>
+          • Documented design and development processes for future reference.<br/>
+          • Participated in code reviews to uphold quality standards.<br/>
+          • Utilized PHP frameworks, including Laravel, to enhance application scalability.
         </Typography>
-        <Typography sx={{ color: '#ff00ff', mb: 2 }}>
-          Western Governors University
+      </Box>
+
+      {/* Louddoor Intern */}
+      <Box sx={{
+        p: 3,
+        border: '1px solid #666',
+        borderRadius: 2,
+        background: 'rgba(102,102,102,0.05)',
+        backdropFilter: 'blur(10px)'
+      }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+          <Box>
+            <Typography variant="h6" sx={{ color: '#ccc', mb: 1 }}>
+              Software Engineering Intern
+            </Typography>
+            <Typography sx={{ color: '#999', mb: 1 }}>
+              Louddoor • Columbia, SC
+            </Typography>
+          </Box>
+          <Typography sx={{ color: '#ccc', fontSize: '0.9rem', fontWeight: 600 }}>
+            02/2023 - 06/2023
+          </Typography>
+        </Box>
+        <Typography sx={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+          • Assisted in writing clear documentation for code and processes.<br/>
+          • Participated in code reviews to ensure quality and adherence to standards.<br/>
+          • Engaged in daily stand-ups to discuss project progress and roadblocks.<br/>
+          • Supported senior engineers in implementing new tools and technologies.<br/>
+          • Created technical documentation such as user manuals, flowcharts, and diagrams.
         </Typography>
-        <Typography sx={{ color: 'rgba(255,255,255,0.8)', lineHeight: 1.6 }}>
-          Pursuing Bachelor's degree in Computer Science with focus on software engineering, 
-          algorithms, and system architecture.
+      </Box>
+
+      {/* Freelance Developer */}
+      <Box sx={{
+        p: 3,
+        border: '1px solid #666',
+        borderRadius: 2,
+        background: 'rgba(102,102,102,0.05)',
+        backdropFilter: 'blur(10px)'
+      }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+          <Box>
+            <Typography variant="h6" sx={{ color: '#ccc', mb: 1 }}>
+              Freelance Software Developer
+            </Typography>
+            <Typography sx={{ color: '#999', mb: 1 }}>
+              Self-employed • Irmo, SC
+            </Typography>
+          </Box>
+          <Typography sx={{ color: '#ccc', fontSize: '0.9rem', fontWeight: 600 }}>
+            12/2020 - 02/2023
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+          {['HTML', 'CSS', 'JavaScript', 'MySQL', 'MongoDB', 'Laravel', 'AWS', 'Azure', 'GCP'].map((tech) => (
+            <Box
+              key={tech}
+              sx={{
+                px: 2,
+                py: 0.5,
+                border: '1px solid #666',
+                borderRadius: 1,
+                color: '#999',
+                fontSize: '0.8rem',
+                background: 'rgba(102,102,102,0.1)'
+              }}
+            >
+              {tech}
+            </Box>
+          ))}
+        </Box>
+        <Typography sx={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+          • Developed mobile software solutions for local companies by analyzing client needs and utilizing various programming languages.<br/>
+          • Tested and maintained software to ensure optimal performance and reliability.<br/>
+          • Communicated technical information effectively to clients, ensuring satisfaction with delivered products.
+        </Typography>
+      </Box>
+
+      {/* Benty Intern */}
+      <Box sx={{
+        p: 3,
+        border: '1px solid #666',
+        borderRadius: 2,
+        background: 'rgba(102,102,102,0.05)',
+        backdropFilter: 'blur(10px)'
+      }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+          <Box>
+            <Typography variant="h6" sx={{ color: '#ccc', mb: 1 }}>
+              Software Engineering Intern
+            </Typography>
+            <Typography sx={{ color: '#999', mb: 1 }}>
+              Benty • Irmo, SC
+            </Typography>
+          </Box>
+          <Typography sx={{ color: '#ccc', fontSize: '0.9rem', fontWeight: 600 }}>
+            09/2019 - 01/2023
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
+          {['Java', 'Python', 'Agile'].map((tech) => (
+            <Box
+              key={tech}
+              sx={{
+                px: 2,
+                py: 0.5,
+                border: '1px solid #666',
+                borderRadius: 1,
+                color: '#999',
+                fontSize: '0.8rem',
+                background: 'rgba(102,102,102,0.1)'
+              }}
+            >
+              {tech}
+            </Box>
+          ))}
+        </Box>
+        <Typography sx={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+          • Developed software features using Java and Python for web applications.<br/>
+          • Analyzed customer requirements to design solutions that meet their needs while adhering to industry standards.<br/>
+          • Collaborated with other developers on coding projects in an Agile environment.<br/>
+          • Optimized existing code by refactoring it for improved readability and performance.<br/>
+          • Shadowed team engineers to learn new skills.<br/>
+          • Built visually rich front-end components.
+        </Typography>
+      </Box>
+
+      {/* Griffin Pools */}
+      <Box sx={{
+        p: 3,
+        border: '1px solid #666',
+        borderRadius: 2,
+        background: 'rgba(102,102,102,0.05)',
+        backdropFilter: 'blur(10px)'
+      }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+          <Box>
+            <Typography variant="h6" sx={{ color: '#ccc', mb: 1 }}>
+              Retail Sales Associate
+            </Typography>
+            <Typography sx={{ color: '#999', mb: 1 }}>
+              Griffin Pools & Spas • Lexington, SC
+            </Typography>
+          </Box>
+          <Typography sx={{ color: '#ccc', fontSize: '0.9rem', fontWeight: 600 }}>
+            03/2018 - 02/2023
+          </Typography>
+        </Box>
+        <Typography sx={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+          • Assisted customers in selecting appropriate pool and spa products, ensuring satisfaction.<br/>
+          • Educated clients on diverse product features to enhance informed purchasing decisions.<br/>
+          • Cultivated strong customer relationships through exceptional service and support.
         </Typography>
       </Box>
     </Box>
